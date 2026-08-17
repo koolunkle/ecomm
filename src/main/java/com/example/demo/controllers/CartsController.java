@@ -12,15 +12,13 @@ import com.example.demo.CartApi;
 import com.example.demo.model.Cart;
 import com.example.demo.model.Item;
 
-import jakarta.validation.Valid;
-
 @RestController
 public class CartsController implements CartApi {
 
     private static final Logger log = LoggerFactory.getLogger(CartsController.class);
 
     @Override
-    public ResponseEntity<List<Item>> addCartItemsByCustomerId(String custormerId, @Valid Item item) {
+    public ResponseEntity<List<Item>> addCartItemsByCustomerId(String custormerId, Item item) {
         log.info("고객 ID 요청: {}\nItem: {}", custormerId, item);
         return ResponseEntity.ok(Collections.emptyList());
     }
