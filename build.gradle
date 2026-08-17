@@ -55,6 +55,13 @@ dependencies {
     implementation 'io.springfox:springfox-oas:3.0.0'
     // OpenAPI Ends
 
+	 // Lombok Starts
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    // Lombok Ends
+
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	testImplementation 'org.springframework.boot:spring-boot-starter-hateoas-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
