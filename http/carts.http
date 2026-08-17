@@ -1,6 +1,7 @@
 ### ID가 1인 /carts에 대한 GET 요청
 GET http://localhost:8080/api/v1/carts/1
 Accept: application/json
+Accept-Language: en
 
 ### ID가 1인 /carts에 대한 POST 요청
 POST http://localhost:8080/api/v1/carts/1/items
