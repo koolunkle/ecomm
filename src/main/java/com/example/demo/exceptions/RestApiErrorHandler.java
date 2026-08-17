@@ -31,8 +31,9 @@ public class RestApiErrorHandler {
         ex.printStackTrace(); // TODO: Should be kept only for development
 
         Error error = ErrorUtils.createError(
-                ErrorCode.GENERIC_ERROR.getErrMsgKey(),
-                ErrorCode.GENERIC_ERROR.getErrCode(),
+                messageSource,
+                locale,
+                ErrorCode.GENERIC_ERROR,
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
@@ -48,8 +49,9 @@ public class RestApiErrorHandler {
         ex.printStackTrace(); // TODO: Should be kept only for development
 
         Error error = ErrorUtils.createError(
-                ErrorCode.HTTP_MEDIATYPE_NOT_SUPPORTED.getErrMsgKey(),
-                ErrorCode.HTTP_MEDIATYPE_NOT_SUPPORTED.getErrCode(),
+                messageSource,
+                locale,
+                ErrorCode.HTTP_MEDIATYPE_NOT_SUPPORTED,
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
                 request.getRequestURI(),
                 request.getMethod());
@@ -67,8 +69,9 @@ public class RestApiErrorHandler {
         ex.printStackTrace(); // TODO: Should be kept only for development
 
         Error error = ErrorUtils.createError(
-                ErrorCode.HTTP_MESSAGE_NOT_WRITABLE.getErrMsgKey(),
-                ErrorCode.HTTP_MESSAGE_NOT_WRITABLE.getErrCode(),
+                messageSource,
+                locale,
+                ErrorCode.HTTP_MESSAGE_NOT_WRITABLE,
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
@@ -86,8 +89,9 @@ public class RestApiErrorHandler {
         ex.printStackTrace(); // TODO: Should be kept only for development
 
         Error error = ErrorUtils.createError(
-                ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE.getErrMsgKey(),
-                ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE.getErrCode(),
+                messageSource,
+                locale,
+                ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE,
                 HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
@@ -105,8 +109,9 @@ public class RestApiErrorHandler {
         ex.printStackTrace(); // TODO: Should be kept only for development
 
         Error error = ErrorUtils.createError(
-                ErrorCode.HTTP_MESSAGE_NOT_READABLE.getErrMsgKey(),
-                ErrorCode.HTTP_MESSAGE_NOT_READABLE.getErrCode(),
+                messageSource,
+                locale,
+                ErrorCode.HTTP_MESSAGE_NOT_READABLE,
                 HttpStatus.NOT_ACCEPTABLE.value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
@@ -124,8 +129,9 @@ public class RestApiErrorHandler {
         ex.printStackTrace(); // TODO: Should be kept only for development
 
         Error error = ErrorUtils.createError(
-                ErrorCode.JSON_PARSE_ERROR.getErrMsgKey(),
-                ErrorCode.JSON_PARSE_ERROR.getErrCode(),
+                messageSource,
+                locale,
+                ErrorCode.JSON_PARSE_ERROR,
                 HttpStatus.NOT_ACCEPTABLE.value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
