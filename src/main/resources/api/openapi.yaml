@@ -60,9 +60,6 @@ paths:
         200:
           description: successful operation
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Cart"
             application/json:
               schema:
                 $ref: "#/components/schemas/Cart"
@@ -106,11 +103,6 @@ paths:
         200:
           description: successful operation
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Item"
             application/json:
               schema:
                 type: array
@@ -135,9 +127,6 @@ paths:
       requestBody:
         description: Item object
         content:
-          application/xml:
-            schema:
-              $ref: "#/components/schemas/Item"
           application/json:
             schema:
               $ref: "#/components/schemas/Item"
@@ -145,11 +134,6 @@ paths:
         201:
           description: Item added successfully
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Item"
             application/json:
               schema:
                 type: array
@@ -174,9 +158,6 @@ paths:
       requestBody:
         description: Item object
         content:
-          application/xml:
-            schema:
-              $ref: "#/components/schemas/Item"
           application/json:
             schema:
               $ref: "#/components/schemas/Item"
@@ -184,11 +165,6 @@ paths:
         201:
           description: Item added successfully
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Item"
             application/json:
               schema:
                 type: array
@@ -221,9 +197,6 @@ paths:
         200:
           description: If item exists in cart
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Item"
             application/json:
               schema:
                 $ref: "#/components/schemas/Item"
@@ -262,9 +235,6 @@ paths:
       requestBody:
         description: New Order Request object
         content:
-          application/xml:
-            schema:
-              $ref: "#/components/schemas/NewOrder"
           application/json:
             schema:
               $ref: "#/components/schemas/NewOrder"
@@ -272,9 +242,6 @@ paths:
         201:
           description: Order added successfully
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Order"
             application/json:
               schema:
                 $ref: "#/components/schemas/Order"
@@ -298,11 +265,6 @@ paths:
         200:
           description: If order exists.
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Order"
             application/json:
               schema:
                 type: array
@@ -329,9 +291,6 @@ paths:
         200:
           description: If order exists.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Order"
             application/json:
               schema:
                 $ref: "#/components/schemas/Order"
@@ -349,11 +308,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
             application/json:
               schema:
                 type: array
@@ -377,9 +331,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/User"
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
@@ -418,9 +369,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Card"
             application/json:
               schema:
                 $ref: "#/components/schemas/Card"
@@ -442,11 +390,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Address"
             application/json:
               schema:
                 type: array
@@ -463,11 +406,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Address"
             application/json:
               schema:
                 type: array
@@ -481,9 +419,6 @@ paths:
       operationId: createAddress
       requestBody:
         content:
-          application/xml:
-            schema:
-              $ref: "#/components/schemas/AddAddressReq"
           application/json:
             schema:
               $ref: "#/components/schemas/AddAddressReq"
@@ -491,9 +426,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Address"
             application/json:
               schema:
                 $ref: "#/components/schemas/Address"
@@ -515,9 +447,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Address"
             application/json:
               schema:
                 $ref: "#/components/schemas/Address"
@@ -549,11 +478,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Card"
             application/json:
               schema:
                 type: array
@@ -567,9 +491,6 @@ paths:
       operationId: registerCard
       requestBody:
         content:
-          application/xml:
-            schema:
-              $ref: "#/components/schemas/AddCardReq"
           application/json:
             schema:
               $ref: "#/components/schemas/AddCardReq"
@@ -577,9 +498,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Card"
             application/json:
               schema:
                 $ref: "#/components/schemas/Card"
@@ -601,9 +519,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Card"
             application/json:
               schema:
                 $ref: "#/components/schemas/Card"
@@ -633,9 +548,6 @@ paths:
       operationId: authorize
       requestBody:
         content:
-          application/xml:
-            schema:
-              $ref: "#/components/schemas/PaymentReq"
           application/json:
             schema:
               $ref: "#/components/schemas/PaymentReq"
@@ -643,9 +555,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Authorization"
             application/json:
               schema:
                 $ref: "#/components/schemas/Authorization"
@@ -666,9 +575,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Authorization"
             application/json:
               schema:
                 $ref: "#/components/schemas/Authorization"
@@ -681,9 +587,6 @@ paths:
       operationId: shipOrder
       requestBody:
         content:
-          application/xml:
-            schema:
-              $ref: "#/components/schemas/ShippingReq"
           application/json:
             schema:
               $ref: "#/components/schemas/ShippingReq"
@@ -691,9 +594,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Authorization"
             application/json:
               schema:
                 $ref: "#/components/schemas/Authorization"
@@ -714,11 +614,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Shipment"
             application/json:
               schema:
                 type: array
@@ -764,11 +659,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Product"
             application/json:
               schema:
                 type: array
@@ -792,9 +682,6 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Product"
             application/json:
               schema:
                 $ref: "#/components/schemas/Product"
@@ -870,8 +757,6 @@ components:
             - PAYMENT_FAILED
             - SHIPMENT_FAILED
             - COMPLETED
-      xml:
-        name: Order
     AddAddressReq:
       allOf:
         - $ref: "#/components/schemas/Address"
@@ -880,8 +765,6 @@ components:
             userId:
               type: string
 
-      xml:
-        name: AddAddressReq
     Address:
       type: object
       properties:
@@ -909,8 +792,6 @@ components:
         pincode:
           description: postal code
           type: string
-      xml:
-        name: Address
     Card:
       type: object
       properties:
@@ -929,14 +810,10 @@ components:
         cvv:
           description: CVV code
           type: string
-      xml:
-        name: Card
     AddCardReq:
       description: Request object for new card registration.
       allOf:
         - $ref: "#/components/schemas/Card"
-      xml:
-        name: AddCardReq
     Payment:
       type: object
       properties:
@@ -949,8 +826,6 @@ components:
         message:
           description: Approval or rejection message
           type: string
-      xml:
-        name: Payment
     Shipment:
       type: object
       properties:
@@ -970,8 +845,6 @@ components:
           description: Estimated Delivery Date
           type: string
           format: date
-      xml:
-        name: Shipment
     ShippingReq:
       description: Contains information required for Shipping request
       type: object
@@ -985,8 +858,6 @@ components:
           description: The number of items in the order
           type: integer
           format: int32
-      xml:
-        name: ShippingReq
 
     User:
       type: object
@@ -1006,11 +877,8 @@ components:
         phone:
           type: string
         userStatus:
-          type: integer
+          type: string
           description: User Status
-          format: int32
-      xml:
-        name: User
     NewOrder:
       description: Contains the new order request information
       type: object
@@ -1029,8 +897,6 @@ components:
           type: array
           items:
             type: string
-      xml:
-        name: NewOrder
     Authorization:
       type: object
       properties:
@@ -1050,8 +916,6 @@ components:
         error:
           description: Processing error description, if any
           type: string
-      xml:
-        name: Authorization
     PaymentReq:
       description: Contains the payment request information
       type: object
@@ -1069,8 +933,6 @@ components:
           description: Payment amount
           type: number
           format: double
-      xml:
-        name: PaymentReq
     CustomerInfoOnCard:
       description: Customer information required for payment processing
       type: object
@@ -1081,8 +943,6 @@ components:
         lastName:
           description: Customer last name
           type: string
-      xml:
-        name: CustomerInfoOnCard
     Product:
       description: Product information
       type: object
@@ -1113,8 +973,6 @@ components:
           uniqueItems: true
           items:
             $ref: "#/components/schemas/Tag"
-      xml:
-        name: Product
     Tag:
       description: A product tag
       type: object
@@ -1125,5 +983,3 @@ components:
         name:
           description: Tag name
           type: string
-      xml:
-        name: Tag
