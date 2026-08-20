@@ -7,13 +7,7 @@
   "invokerPackage": "com.example.demo",
   "serializableModel": true,
   "useTags": true,
-  "useGzipFeature": true,
   "hateoas": true,
   "unhandledException": true,
-  "useSpringBoot3": true,
-  "useSwaggerUI": true,
-  "importMappings": {
-    "ResourceSupport": "org.springframework.hateoas.RepresentationModel",
-    "Link": "org.springframework.hateoas.Link"
-  }
+  "useSpringBoot3": true
 }
