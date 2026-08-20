@@ -7,9 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.example.demo.entity.AuthorizationEntity;
-import com.example.demo.entity.OrderEntity;
 import com.example.demo.model.PaymentReq;
-import com.example.demo.repository.OrderRepository;
+import com.example.demo.repository.AuthorizationRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
-  private final OrderRepository orderRepo;
+  private final AuthorizationRepository authorizationRepo;
 
   @Override
   public Optional<AuthorizationEntity> authorize(PaymentReq paymentReq) {
@@ -27,6 +26,6 @@ public class PaymentServiceImpl implements PaymentService {
 
   @Override
   public Optional<AuthorizationEntity> getOrdersPaymentAuthorization(String orderId) {
-    return orderRepo.findById(UUID.fromString(orderId)).map(OrderEntity::getAuthorizationEntity);
+    return authorizationRepo.findByOrderEntityId(UUID.fromString(orderId));
   }
 }

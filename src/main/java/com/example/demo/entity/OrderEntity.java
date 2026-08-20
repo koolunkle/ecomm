@@ -71,7 +71,4 @@ public class OrderEntity {
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
   @JoinTable(name = "ORDER_ITEM", joinColumns = @JoinColumn(name = "ORDER_ID"), inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
   private List<ItemEntity> items = new ArrayList<>();
-
-  @OneToOne(mappedBy = "orderEntity")
-  private AuthorizationEntity authorizationEntity;
 }
