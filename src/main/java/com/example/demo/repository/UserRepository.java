@@ -1,10 +1,16 @@
 package com.example.demo.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 
 import com.example.demo.entity.UserEntity;
 
 public interface UserRepository extends CrudRepository<UserEntity, UUID> {
+
+    @Override
+    @EntityGraph(attributePaths = {"addresses", "cards"})
+    Optional<UserEntity> findById(UUID id);
 }

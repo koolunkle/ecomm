@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Optional<CardEntity> getCardByCustomerId(String id) {
-    List<CardEntity> cards = repository.findById(UUID.fromString(id))
+    Set<CardEntity> cards = repository.findById(UUID.fromString(id))
         .map(UserEntity::getCards)
         .orElseThrow(() -> new CustomerNotFoundException(String.format(" - %s", id)));
 
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
       throw new ResourceNotFoundException(String.format("No card found for customer (ID: %s)", id));
     }
 
-    return Optional.of(cards.get(0));
+    return cards.stream().findFirst();
   }
 
   @Override

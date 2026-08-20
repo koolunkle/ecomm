@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.Basic;
@@ -54,12 +55,14 @@ public class UserEntity {
     @Column(name = "USER_STATUS")
     private String userStatus;
 
+    // Set (not List) so that addresses and cards can be join-fetched together in one query -
+    // Hibernate can't join-fetch more than one List/bag-typed collection in a single query.
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "USER_ADDRESS", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID"))
-    private List<AddressEntity> addresses = new ArrayList<>();
+    private Set<AddressEntity> addresses = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<CardEntity> cards;
+    private Set<CardEntity> cards;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
     private CartEntity cart;
