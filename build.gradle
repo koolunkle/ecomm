@@ -51,8 +51,6 @@ dependencies {
     compileOnly 'org.openapitools:jackson-databind-nullable:0.2.3'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-	 // required for schema in swagger generated code
-    implementation 'io.springfox:springfox-oas:3.0.0'
     // OpenAPI Ends
 
 	 // Lombok Starts
