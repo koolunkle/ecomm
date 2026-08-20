@@ -1,4 +1,4 @@
-package com.example.demo.exceptions;
+package com.example.demo.exception;
 
 import java.util.Locale;
 

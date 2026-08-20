@@ -1,4 +1,4 @@
-package com.example.demo.exceptions;
+package com.example.demo.exception;
 
 import org.apache.logging.log4j.util.Strings;
 
