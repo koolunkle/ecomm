@@ -8,8 +8,20 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
+// JAR Manifest에 애플리케이션 제목 및 버전 메타데이터 설정
+tasks.named('bootJar') {
+	manifest {
+		attributes(
+			'Implementation-Title': project.name,
+			'Implementation-Version': project.version
+		)
+	}
+}
+
+// OpenAPI 생성 코드 출력 디렉터리 설정
 def generatedOpenApiDir = layout.buildDirectory.dir("generated/openapi")
 
+// OpenAPI Generator 태스크 설정 (Model, API, Support 파일 생성)
 openApiGenerate {
     generatorName = 'spring'
     inputSpec = file("${rootDir}/src/main/resources/api/openapi.yaml").toString()
@@ -18,7 +30,6 @@ openApiGenerate {
     ignoreFileOverride = file("${rootDir}/src/main/resources/api/.openapi-generator-ignore").toString()
     typeMappings = ['URI': 'URI']
     importMappings = ['URI': 'java.net.URI']
-    // openapi-generator-cli's --components equivalent: generate only models/apis + ApiUtil.java support file
     globalProperties = [
         models: '',
         apis: '',
@@ -26,11 +37,14 @@ openApiGenerate {
     ]
 }
 
+// 리소스 처리 및 Java 컴파일 전 OpenAPI 생성 수행
 processResources {
   dependsOn(tasks.openApiGenerate)
 }
 
 compileJava.dependsOn tasks.openApiGenerate
+
+// 생성된 소스 코드 및 리소스를 메인 소스셋에 추가
 sourceSets.main.java.srcDir "${generatedOpenApiDir.get()}/src/main/java"
 sourceSets.main.resources.srcDir "${generatedOpenApiDir.get()}/src/main/resources"
 
@@ -45,35 +59,42 @@ repositories {
 }
 
 dependencies {
-	 // OpenAPI Starts
-    implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.25'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    compileOnly 'org.openapitools:jackson-databind-nullable:0.2.3'
-	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-    // OpenAPI Ends
+	// --- Web: 웹 요청 처리 및 유효성 검증 ---
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc' // Spring MVC 웹 지원
+	implementation 'org.springframework.boot:spring-boot-starter-validation' // Request 유효성 검증
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas' // REST HATEOAS 지원
 
-	 // Lombok Starts
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
-    // Lombok Ends
+	// --- OpenAPI: Swagger/OpenAPI 연동 ---
+	implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.25' // Swagger 어노테이션
+	compileOnly 'org.openapitools:jackson-databind-nullable:0.2.3' // OpenAPI Nullable 필드 처리
 
-    // MapStruct Starts
-    implementation 'org.mapstruct:mapstruct:1.6.3'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-    // MapStruct Ends
+	// --- Persistence: 데이터베이스 및 마이그레이션 ---
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA 데이터 접근
+	implementation 'org.springframework.boot:spring-boot-flyway' // Flyway 부트 연동
+	implementation 'org.flywaydb:flyway-core' // DB 스키마 마이그레이션
+	runtimeOnly 'com.h2database:h2' // H2 DB
+	implementation 'org.springframework.boot:spring-boot-h2console' // H2 Web Console 지원
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-flyway'
-    implementation 'org.flywaydb:flyway-core'
-    runtimeOnly 'com.h2database:h2'
+	// --- Observability: 분산 트레이싱 및 로그 추적 ---
+	// Micrometer & Brave 기반 분산 트레이싱 (traceId/spanId 로깅)
+	implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave'
+	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 
-	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-	testImplementation 'org.springframework.boot:spring-boot-starter-hateoas-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// --- Lombok: 코드 자동 생성 ---
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// --- MapStruct: DTO-Entity 객체 매핑 ---
+	implementation 'org.mapstruct:mapstruct:1.6.3' // MapStruct API
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3' // MapStruct 코드 생성기
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0' // Lombok 연동 바인딩
+
+	// --- Test: 테스트 환경 ---
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test' // Web MVC 테스트
+	testImplementation 'org.springframework.boot:spring-boot-starter-hateoas-test' // HATEOAS 테스트
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // JUnit 5 실행기
 }
 
 tasks.named('test') {
