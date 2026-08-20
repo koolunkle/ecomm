@@ -1,10 +1,10 @@
-### ID가 1인 /carts에 대한 GET 요청
-GET http://localhost:8080/api/v1/carts/1
+### 특정 장바구니 조회
+GET http://localhost:8080/api/v1/carts/a1b9b31d-e73c-4112-af7c-b68530f38222
 Accept: application/json
 Accept-Language: ko
 
-### ID가 1인 /carts에 대한 POST 요청
-POST http://localhost:8080/api/v1/carts/1/items
+### 장바구니에 상품 추가
+POST http://localhost:8080/api/v1/carts/a1b9b31d-e73c-4112-af7c-b68530f38222/items
 Accept: application/json
 Content-Type: application/json
 

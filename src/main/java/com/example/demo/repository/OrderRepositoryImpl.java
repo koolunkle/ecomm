@@ -3,27 +3,26 @@ package com.example.demo.repository;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.entity.AddressEntity;
+import com.example.demo.entity.CardEntity;
 import com.example.demo.entity.CartEntity;
 import com.example.demo.entity.ItemEntity;
 import com.example.demo.entity.OrderEntity;
-import com.example.demo.entity.OrderItemEntity;
+import com.example.demo.entity.UserEntity;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.NewOrder;
 import com.example.demo.model.Order.StatusEnum;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -36,57 +35,43 @@ public class OrderRepositoryImpl implements OrderRepositoryExt {
 
         private final ItemRepository itemRepo;
         private final CartRepository cartRepo;
-        private final OrderItemRepository orderItemRepo;
 
         @Override
         public Optional<OrderEntity> insert(NewOrder m) {
                 Iterable<ItemEntity> dbItems = itemRepo.findByCustomerId(m.getCustomerId());
                 List<ItemEntity> items = StreamSupport.stream(dbItems.spliterator(), false).toList();
 
-                if (items.size() < 1) {
+                if (items.isEmpty()) {
                         throw new ResourceNotFoundException(String.format(
                                         "There is no item found in customer's (ID: %s) cart.", m.getCustomerId()));
                 }
 
-                BigDecimal total = BigDecimal.ZERO;
+                BigDecimal total = items.stream()
+                                .map(i -> BigDecimal.valueOf(i.getQuantity()).multiply(i.getPrice()))
+                                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-                for (ItemEntity i : items) {
-                        total = (BigDecimal.valueOf(i.getQuantity()).multiply(i.getPrice())).add(total);
-                }
+                // em.find() is used instead of em.getReference() so the returned entity carries
+                // fully-initialized associations rather than lazy proxies that would become
+                // unusable once this method's transaction/session closes (open-in-view is disabled).
+                OrderEntity entity = new OrderEntity();
+                entity.setUserEntity(em.find(UserEntity.class, UUID.fromString(m.getCustomerId())));
+                entity.setAddressEntity(em.find(AddressEntity.class, UUID.fromString(m.getAddressId())));
+                entity.setCardEntity(em.find(CardEntity.class, UUID.fromString(m.getCardId())));
+                entity.setOrderDate(Timestamp.from(Instant.now()));
+                entity.setTotal(total);
+                entity.setStatus(StatusEnum.CREATED);
+                // Setting items here (rather than leaving them for a caller to populate) both
+                // persists the order_item join rows via cascade and lets the returned entity
+                // reflect its real items instead of the empty list a fresh OrderEntity starts with.
+                entity.setItems(items);
 
-                Timestamp orderDate = Timestamp.from(Instant.now());
-
-                em.createNativeQuery(
-                                """
-                                                INSERT INTO ecomm.orders (address_id, card_id, customer_id, order_date, total, status) VALUES(?, ?, ?, ?, ?, ?)
-                                                """)
-                                .setParameter(1, m.getAddressId())
-                                .setParameter(2, m.getCardId())
-                                .setParameter(3, m.getCustomerId())
-                                .setParameter(4, orderDate)
-                                .setParameter(5, total)
-                                .setParameter(6, StatusEnum.CREATED.getValue())
-                                .executeUpdate();
+                em.persist(entity);
 
                 Optional<CartEntity> oCart = cartRepo.findByCustomerId(UUID.fromString(m.getCustomerId()));
                 CartEntity cart = oCart.orElseThrow(() -> new ResourceNotFoundException(
                                 String.format("Cart not found for given customer (ID: %s)", m.getCustomerId())));
 
                 itemRepo.deleteCartItemJoinById(cart.getItems().stream().map(ItemEntity::getId).toList(), cart.getId());
-
-                OrderEntity entity = (OrderEntity) em.createNativeQuery(
-                                """
-                                                SELECT o.* FROM ecomm.orders o WHERE o.customer_id = ? AND o.order_date >= ?
-                                                """,
-                                OrderEntity.class)
-                                .setParameter(1, m.getCustomerId())
-                                .setParameter(2, OffsetDateTime.ofInstant(orderDate.toInstant(), ZoneId.of("Z"))
-                                                .truncatedTo(ChronoUnit.MICROS))
-                                .getSingleResult();
-
-                orderItemRepo.saveAll(cart.getItems().stream()
-                                .map(i -> new OrderItemEntity().setOrderId(entity.getId()).setItemId(i.getId()))
-                                .toList());
 
                 return Optional.of(entity);
         }
