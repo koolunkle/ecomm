@@ -49,7 +49,7 @@ public class ProductEntity {
   @Column(name = "IMAGE_URL")
   private String imageUrl;
 
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   @JoinTable(name = "PRODUCT_TAG", joinColumns = @JoinColumn(name = "PRODUCT_ID"), inverseJoinColumns = @JoinColumn(name = "TAG_ID"))
   private List<TagEntity> tags = new ArrayList<>();
 

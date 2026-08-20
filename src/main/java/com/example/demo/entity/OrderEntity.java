@@ -45,12 +45,12 @@ public class OrderEntity {
   @Enumerated(EnumType.STRING)
   private StatusEnum status;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CUSTOMER_ID", nullable = false)
   private UserEntity userEntity;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID")
   private AddressEntity addressEntity;
 
   @OneToOne(cascade = CascadeType.ALL)
@@ -61,14 +61,14 @@ public class OrderEntity {
   @OneToOne
   private ShipmentEntity shipment;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CARD_ID", referencedColumnName = "ID")
   private CardEntity cardEntity;
 
   @Column(name = "ORDER_DATE")
   private Timestamp orderDate;
 
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
   @JoinTable(name = "ORDER_ITEM", joinColumns = @JoinColumn(name = "ORDER_ID"), inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
   private List<ItemEntity> items = new ArrayList<>();
 
