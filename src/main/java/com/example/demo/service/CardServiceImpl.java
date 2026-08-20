@@ -48,7 +48,15 @@ public class CardServiceImpl implements CardService {
 
     user.ifPresent(e::setUser);
 
-    return e.setNumber(m.getCardNumber()).setCvv(m.getCvv())
-        .setExpires(m.getExpires());
+    // Only the last 4 digits are retained; the CVV must never be persisted (PCI-DSS).
+    return e.setNumber(lastFourDigits(m.getCardNumber())).setExpires(m.getExpires());
+  }
+
+  private static String lastFourDigits(String cardNumber) {
+    if (cardNumber == null || cardNumber.length() <= 4) {
+      return cardNumber;
+    }
+
+    return cardNumber.substring(cardNumber.length() - 4);
   }
 }

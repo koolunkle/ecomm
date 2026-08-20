@@ -34,9 +34,6 @@ public class CardEntity {
     @Column(name = "EXPIRES")
     private String expires;
 
-    @Column(name = "CVV")
-    private String cvv;
-
     @OneToOne
     @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
     private UserEntity user;
