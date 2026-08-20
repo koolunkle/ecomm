@@ -14,7 +14,6 @@ import com.example.demo.model.AddAddressReq;
 import com.example.demo.model.Address;
 import com.example.demo.service.AddressService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class AddressController implements AddressApi {
   private final AddressRepresentationModelAssembler assembler;
 
   @Override
-  public ResponseEntity<Address> createAddress(@Valid AddAddressReq addAddressReq) {
+  public ResponseEntity<Address> createAddress(AddAddressReq addAddressReq) {
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(service.createAddress(addAddressReq).map(assembler::toModel).get());

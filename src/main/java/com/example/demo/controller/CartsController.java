@@ -13,7 +13,6 @@ import com.example.demo.model.Cart;
 import com.example.demo.model.Item;
 import com.example.demo.service.CartService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,14 +24,14 @@ public class CartsController implements CartApi {
     private final CartRepresentationModelAssembler assembler;
 
     @Override
-    public ResponseEntity<List<Item>> addCartItemsByCustomerId(String customerId, @Valid Item item) {
+    public ResponseEntity<List<Item>> addCartItemsByCustomerId(String customerId, Item item) {
         log.info("Request for customer ID: {}\nItem: {}", customerId, item);
         return ResponseEntity.ok(service.addCartItemsByCustomerId(customerId, item));
     }
 
     @Override
     public ResponseEntity<List<Item>> addOrReplaceItemsByCustomerId(String customerId,
-            @Valid Item item) {
+            Item item) {
         return ResponseEntity.ok(service.addOrReplaceItemsByCustomerId(customerId, item));
     }
 

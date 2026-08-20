@@ -10,7 +10,6 @@ import com.example.demo.hateoas.ProductRepresentationModelAssembler;
 import com.example.demo.model.Product;
 import com.example.demo.service.ProductService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -30,10 +29,10 @@ public class ProductController implements ProductApi {
 
   @Override
   public ResponseEntity<List<Product>> queryProducts(
-      @Valid String tag,
-      @Valid String name,
-      @Valid Integer page,
-      @Valid Integer size) {
+      String tag,
+      String name,
+      Integer page,
+      Integer size) {
     return ResponseEntity.ok(assembler.toListModel(service.getAllProducts()));
   }
 }

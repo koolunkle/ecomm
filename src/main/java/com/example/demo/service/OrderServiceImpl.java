@@ -12,8 +12,6 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.NewOrder;
 import com.example.demo.repository.OrderRepository;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,7 +22,7 @@ public class OrderServiceImpl implements OrderService {
   private final OrderRepository repository;
 
   @Override
-  public Optional<OrderEntity> addOrder(@Valid NewOrder newOrder) {
+  public Optional<OrderEntity> addOrder(NewOrder newOrder) {
     if (Strings.isEmpty(newOrder.getCustomerId())) {
       throw new ResourceNotFoundException("Invalid customer id.");
     }
@@ -41,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public Iterable<OrderEntity> getOrdersByCustomerId(@NotNull @Valid String customerId) {
+  public Iterable<OrderEntity> getOrdersByCustomerId(String customerId) {
     return repository.findByCustomerId(UUID.fromString(customerId));
   }
 

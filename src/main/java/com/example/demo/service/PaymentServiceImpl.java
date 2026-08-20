@@ -11,8 +11,6 @@ import com.example.demo.entity.OrderEntity;
 import com.example.demo.model.PaymentReq;
 import com.example.demo.repository.OrderRepository;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -23,12 +21,12 @@ public class PaymentServiceImpl implements PaymentService {
   private final OrderRepository orderRepo;
 
   @Override
-  public Optional<AuthorizationEntity> authorize(@Valid PaymentReq paymentReq) {
+  public Optional<AuthorizationEntity> authorize(PaymentReq paymentReq) {
     return Optional.empty();
   }
 
   @Override
-  public Optional<AuthorizationEntity> getOrdersPaymentAuthorization(@NotNull String orderId) {
+  public Optional<AuthorizationEntity> getOrdersPaymentAuthorization(String orderId) {
     return orderRepo.findById(UUID.fromString(orderId)).map(OrderEntity::getAuthorizationEntity);
   }
 }

@@ -14,7 +14,6 @@ import com.example.demo.model.AddCardReq;
 import com.example.demo.model.Card;
 import com.example.demo.service.CardService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,7 +43,7 @@ public class CardController implements CardApi {
   }
 
   @Override
-  public ResponseEntity<Card> registerCard(@Valid AddCardReq addCardReq) {
+  public ResponseEntity<Card> registerCard(AddCardReq addCardReq) {
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(service.registerCard(addCardReq).map(assembler::toModel).get());

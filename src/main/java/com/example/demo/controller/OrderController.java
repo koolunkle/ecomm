@@ -13,8 +13,6 @@ import com.example.demo.model.NewOrder;
 import com.example.demo.model.Order;
 import com.example.demo.service.OrderService;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class OrderController implements OrderApi {
   private final OrderService service;
 
   @Override
-  public ResponseEntity<Order> addOrder(@Valid NewOrder newOrder) {
+  public ResponseEntity<Order> addOrder(NewOrder newOrder) {
     return service.addOrder(newOrder)
         .map(assembler::toModel)
         .map(ResponseEntity::ok)
@@ -33,7 +31,7 @@ public class OrderController implements OrderApi {
   }
 
   @Override
-  public ResponseEntity<List<Order>> getOrdersByCustomerId(@NotNull @Valid String customerId) {
+  public ResponseEntity<List<Order>> getOrdersByCustomerId(String customerId) {
     return ResponseEntity.ok(assembler.toListModel(service.getOrdersByCustomerId(customerId)));
   }
 

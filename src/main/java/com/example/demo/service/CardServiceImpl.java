@@ -12,7 +12,6 @@ import com.example.demo.model.AddCardReq;
 import com.example.demo.repository.CardRepository;
 import com.example.demo.repository.UserRepository;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,7 +38,7 @@ public class CardServiceImpl implements CardService {
   }
 
   @Override
-  public Optional<CardEntity> registerCard(@Valid AddCardReq addCardReq) {
+  public Optional<CardEntity> registerCard(AddCardReq addCardReq) {
     return Optional.of(repository.save(toEntity(addCardReq)));
   }
 

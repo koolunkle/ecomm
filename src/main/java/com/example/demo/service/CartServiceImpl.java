@@ -20,8 +20,6 @@ import com.example.demo.model.Item;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.UserRepository;
 
-import jakarta.validation.Valid;
-
 @Service
 @Validated
 public class CartServiceImpl implements CartService {
@@ -38,7 +36,7 @@ public class CartServiceImpl implements CartService {
   }
 
   @Override
-  public List<Item> addCartItemsByCustomerId(String customerId, @Valid Item item) {
+  public List<Item> addCartItemsByCustomerId(String customerId, Item item) {
     CartEntity entity = getCartByCustomerId(customerId);
     long count = entity.getItems()
         .stream()
@@ -56,7 +54,7 @@ public class CartServiceImpl implements CartService {
   }
 
   @Override
-  public List<Item> addOrReplaceItemsByCustomerId(String customerId, @Valid Item item) {
+  public List<Item> addOrReplaceItemsByCustomerId(String customerId, Item item) {
     CartEntity entity = getCartByCustomerId(customerId);
     List<ItemEntity> items = Objects.nonNull(entity.getItems()) ? entity.getItems() : List.of();
     AtomicBoolean itemExists = new AtomicBoolean(false);

@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import com.example.demo.entity.ShipmentEntity;
 import com.example.demo.repository.ShipmentRepository;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,7 +19,7 @@ public class ShipmentServiceImpl implements ShipmentService {
   private final ShipmentRepository repository;
 
   @Override
-  public Iterable<ShipmentEntity> getShipmentByOrderId(@NotBlank(message = "Invalid shipment ID.") String id) {
+  public Iterable<ShipmentEntity> getShipmentByOrderId(String id) {
     return repository.findAllById(List.of(UUID.fromString(id)));
   }
 }

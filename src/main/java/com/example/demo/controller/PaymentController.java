@@ -7,8 +7,6 @@ import com.example.demo.PaymentApi;
 import com.example.demo.model.Authorization;
 import com.example.demo.model.PaymentReq;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -16,12 +14,12 @@ import lombok.RequiredArgsConstructor;
 public class PaymentController implements PaymentApi {
 
   @Override
-  public ResponseEntity<Authorization> authorize(@Valid PaymentReq paymentReq) {
+  public ResponseEntity<Authorization> authorize(PaymentReq paymentReq) {
     return null;
   }
 
   @Override
-  public ResponseEntity<Authorization> getOrdersPaymentAuthorization(@NotNull @Valid String id) {
+  public ResponseEntity<Authorization> getOrdersPaymentAuthorization(String id) {
     return null;
   }
 }
