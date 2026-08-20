@@ -16,7 +16,7 @@ public class ItemNotFoundException extends RuntimeException {
 
     public ItemNotFoundException(final String message) {
         super(message);
-        this.errMsgKey = ErrorCode.CUSTOMER_NOT_FOUND.getErrMsgKey();
-        this.errorCode = ErrorCode.CUSTOMER_NOT_FOUND.getErrCode();
+        this.errMsgKey = ErrorCode.ITEM_NOT_FOUND.getErrMsgKey();
+        this.errorCode = ErrorCode.ITEM_NOT_FOUND.getErrCode();
     }
 }

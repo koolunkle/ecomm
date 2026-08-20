@@ -28,7 +28,7 @@ public class RestApiErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Error> handleException(HttpServletRequest request, Exception ex, Locale locale) {
-        ex.printStackTrace(); // TODO: Should be kept only for development
+        log.error("Unhandled exception", ex);
 
         Error error = ErrorUtils.createError(
                 messageSource,
@@ -46,7 +46,7 @@ public class RestApiErrorHandler {
             HttpServletRequest request,
             HttpMediaTypeNotSupportedException ex,
             Locale locale) {
-        ex.printStackTrace(); // TODO: Should be kept only for development
+        log.error("Unsupported media type requested", ex);
 
         Error error = ErrorUtils.createError(
                 messageSource,
@@ -56,9 +56,7 @@ public class RestApiErrorHandler {
                 request.getRequestURI(),
                 request.getMethod());
 
-        log.info("HttpMediaTypeNotSupportedException :: request.getMethod(): " + request.getMethod());
-
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
     @ExceptionHandler(HttpMessageNotWritableException.class)
@@ -66,17 +64,15 @@ public class RestApiErrorHandler {
             HttpServletRequest request,
             HttpMessageNotWritableException ex,
             Locale locale) {
-        ex.printStackTrace(); // TODO: Should be kept only for development
+        log.error("Failed to write response body", ex);
 
         Error error = ErrorUtils.createError(
                 messageSource,
                 locale,
                 ErrorCode.HTTP_MESSAGE_NOT_WRITABLE,
-                HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
-
-        log.info("HttpMessageNotWritableException :: request.getMethod(): " + request.getMethod());
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -86,19 +82,17 @@ public class RestApiErrorHandler {
             HttpServletRequest request,
             HttpMediaTypeNotAcceptableException ex,
             Locale locale) {
-        ex.printStackTrace(); // TODO: Should be kept only for development
+        log.error("None of the acceptable media types are supported", ex);
 
         Error error = ErrorUtils.createError(
                 messageSource,
                 locale,
                 ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE,
-                HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+                HttpStatus.NOT_ACCEPTABLE.value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        log.info("HttpMediaTypeNotAcceptableException :: request.getMethod(): " + request.getMethod());
-
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -106,19 +100,17 @@ public class RestApiErrorHandler {
             HttpServletRequest request,
             HttpMessageNotReadableException ex,
             Locale locale) {
-        ex.printStackTrace(); // TODO: Should be kept only for development
+        log.error("Failed to read request body", ex);
 
         Error error = ErrorUtils.createError(
                 messageSource,
                 locale,
                 ErrorCode.HTTP_MESSAGE_NOT_READABLE,
-                HttpStatus.NOT_ACCEPTABLE.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        log.info("HttpMessageNotReadableException :: request.getMethod(): " + request.getMethod());
-
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(JsonParseException.class)
@@ -126,18 +118,88 @@ public class RestApiErrorHandler {
             HttpServletRequest request,
             JsonParseException ex,
             Locale locale) {
-        ex.printStackTrace(); // TODO: Should be kept only for development
+        log.error("Failed to parse JSON request body", ex);
 
         Error error = ErrorUtils.createError(
                 messageSource,
                 locale,
                 ErrorCode.JSON_PARSE_ERROR,
-                HttpStatus.NOT_ACCEPTABLE.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        log.info("JsonParseException :: request.getMethod(): " + request.getMethod());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Error> handleResourceNotFoundException(
+            HttpServletRequest request,
+            ResourceNotFoundException ex,
+            Locale locale) {
+        log.error("Resource not found", ex);
+
+        Error error = ErrorUtils.createError(
+                messageSource,
+                locale,
+                ErrorCode.RESOURCE_NOT_FOUND,
+                HttpStatus.NOT_FOUND.value(),
+                request.getRequestURL().toString(),
+                request.getMethod());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<Error> handleCustomerNotFoundException(
+            HttpServletRequest request,
+            CustomerNotFoundException ex,
+            Locale locale) {
+        log.error("Customer not found", ex);
+
+        Error error = ErrorUtils.createError(
+                messageSource,
+                locale,
+                ErrorCode.CUSTOMER_NOT_FOUND,
+                HttpStatus.NOT_FOUND.value(),
+                request.getRequestURL().toString(),
+                request.getMethod());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ItemNotFoundException.class)
+    public ResponseEntity<Error> handleItemNotFoundException(
+            HttpServletRequest request,
+            ItemNotFoundException ex,
+            Locale locale) {
+        log.error("Item not found", ex);
+
+        Error error = ErrorUtils.createError(
+                messageSource,
+                locale,
+                ErrorCode.ITEM_NOT_FOUND,
+                HttpStatus.NOT_FOUND.value(),
+                request.getRequestURL().toString(),
+                request.getMethod());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(GenericAlreadyExistsException.class)
+    public ResponseEntity<Error> handleGenericAlreadyExistsException(
+            HttpServletRequest request,
+            GenericAlreadyExistsException ex,
+            Locale locale) {
+        log.error("Resource already exists", ex);
+
+        Error error = ErrorUtils.createError(
+                messageSource,
+                locale,
+                ErrorCode.GENERIC_ALREADY_EXISTS,
+                HttpStatus.CONFLICT.value(),
+                request.getRequestURL().toString(),
+                request.getMethod());
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }
