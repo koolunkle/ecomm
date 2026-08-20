@@ -8,29 +8,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.controller.PaymentController;
 import com.example.demo.entity.PaymentEntity;
+import com.example.demo.mapper.PaymentMapper;
 import com.example.demo.model.Payment;
 
 @Component
 public class PaymentRepresentationModelAssembler extends
     RepresentationModelAssemblerSupport<PaymentEntity, Payment> {
 
-  public PaymentRepresentationModelAssembler() {
+  private final PaymentMapper paymentMapper;
+
+  public PaymentRepresentationModelAssembler(PaymentMapper paymentMapper) {
     super(PaymentController.class, Payment.class);
+    this.paymentMapper = paymentMapper;
   }
 
   @Override
   public Payment toModel(PaymentEntity entity) {
-    Payment resource = new Payment();
-    BeanUtils.copyProperties(entity, resource);
+    Payment resource = paymentMapper.toModel(entity);
 
-    resource.setId(entity.getId().toString());
-    
     resource.add(linkTo(methodOn(PaymentController.class).getOrdersPaymentAuthorization(entity.getId().toString()))
         .withSelfRel());
 

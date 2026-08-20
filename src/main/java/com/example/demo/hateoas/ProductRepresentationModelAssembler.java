@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.controller.ProductController;
 import com.example.demo.entity.ProductEntity;
+import com.example.demo.mapper.ProductMapper;
 import com.example.demo.model.Product;
 import com.example.demo.model.Tag;
 
@@ -22,17 +22,17 @@ import com.example.demo.model.Tag;
 public class ProductRepresentationModelAssembler extends
     RepresentationModelAssemblerSupport<ProductEntity, Product> {
 
-  public ProductRepresentationModelAssembler() {
+  private final ProductMapper productMapper;
+
+  public ProductRepresentationModelAssembler(ProductMapper productMapper) {
     super(ProductController.class, Product.class);
+    this.productMapper = productMapper;
   }
 
   @Override
   public Product toModel(ProductEntity entity) {
-    Product resource = new Product();
-    BeanUtils.copyProperties(entity, resource);
+    Product resource = productMapper.toModel(entity);
 
-    resource.setId(entity.getId().toString());
-    resource.setPrice(entity.getPrice().doubleValue());
     resource.setTag(
         entity.getTags().stream().map(t -> new Tag().id(t.getId().toString()).name(t.getName())).collect(toSet()));
 

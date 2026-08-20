@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.controller.OrderController;
 import com.example.demo.entity.OrderEntity;
+import com.example.demo.mapper.OrderMapper;
 import com.example.demo.model.Order;
 import com.example.demo.service.ItemService;
 
@@ -22,15 +22,17 @@ import com.example.demo.service.ItemService;
 public class OrderRepresentationModelAssembler extends
     RepresentationModelAssemblerSupport<OrderEntity, Order> {
 
+  private final OrderMapper orderMapper;
   private final UserRepresentationModelAssembler uAssembler;
   private final AddressRepresentationModelAssembler aAssembler;
   private final CardRepresentationModelAssembler cAssembler;
   private final ItemService itemService;
 
-  public OrderRepresentationModelAssembler(UserRepresentationModelAssembler uAssembler,
+  public OrderRepresentationModelAssembler(OrderMapper orderMapper, UserRepresentationModelAssembler uAssembler,
       AddressRepresentationModelAssembler aAssembler, CardRepresentationModelAssembler cAssembler,
       ShipmentRepresentationModelAssembler sAssembler, ItemService itemService) {
     super(OrderController.class, Order.class);
+    this.orderMapper = orderMapper;
     this.uAssembler = uAssembler;
     this.aAssembler = aAssembler;
     this.cAssembler = cAssembler;
@@ -39,8 +41,7 @@ public class OrderRepresentationModelAssembler extends
 
   @Override
   public Order toModel(OrderEntity entity) {
-    Order resource = new Order();
-    BeanUtils.copyProperties(entity, resource);
+    Order resource = orderMapper.toModel(entity);
 
     resource
         .id(entity.getId().toString())
@@ -48,7 +49,8 @@ public class OrderRepresentationModelAssembler extends
         .address(aAssembler.toModel(entity.getAddressEntity()))
         .card(cAssembler.toModel(entity.getCardEntity()))
         .items(itemService.toModelList(entity.getItems()))
-        .date(entity.getOrderDate().toInstant().atOffset(ZoneOffset.UTC));
+        .date(entity.getOrderDate().toInstant().atOffset(ZoneOffset.UTC))
+        .total(entity.getTotal().doubleValue());
 
     resource.add(linkTo(methodOn(OrderController.class).getOrdersByOrderId(entity.getId().toString())).withSelfRel());
 

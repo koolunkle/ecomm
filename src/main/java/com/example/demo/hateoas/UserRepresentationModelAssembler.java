@@ -8,28 +8,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.controller.CustomerController;
 import com.example.demo.entity.UserEntity;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 
 @Component
 public class UserRepresentationModelAssembler extends
     RepresentationModelAssemblerSupport<UserEntity, User> {
 
-  public UserRepresentationModelAssembler() {
+  private final UserMapper userMapper;
+
+  public UserRepresentationModelAssembler(UserMapper userMapper) {
     super(CustomerController.class, User.class);
+    this.userMapper = userMapper;
   }
 
   @Override
   public User toModel(UserEntity entity) {
-    User resource = new User();
-    BeanUtils.copyProperties(entity, resource);
-
-    resource.setId(entity.getId().toString());
+    User resource = userMapper.toModel(entity);
 
     resource.add(linkTo(methodOn(CustomerController.class).getCustomerById(entity.getId().toString())).withSelfRel());
     resource.add(linkTo(methodOn(CustomerController.class).getAllCustomers()).withRel("customers"));

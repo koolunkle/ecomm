@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.controller.CartsController;
 import com.example.demo.entity.CartEntity;
+import com.example.demo.mapper.CartMapper;
 import com.example.demo.model.Cart;
 import com.example.demo.service.ItemService;
 
@@ -21,27 +21,23 @@ import com.example.demo.service.ItemService;
 public class CartRepresentationModelAssembler extends
     RepresentationModelAssemblerSupport<CartEntity, Cart> {
 
+  private final CartMapper cartMapper;
   private final ItemService itemService;
 
-  public CartRepresentationModelAssembler(ItemService itemService) {
+  public CartRepresentationModelAssembler(CartMapper cartMapper, ItemService itemService) {
     super(CartsController.class, Cart.class);
+    this.cartMapper = cartMapper;
     this.itemService = itemService;
   }
 
   @Override
   public Cart toModel(CartEntity entity) {
-    String uid = Objects.nonNull(entity.getUser()) ? entity.getUser().getId().toString() : null;
-    String cid = Objects.nonNull(entity.getId()) ? entity.getId().toString() : null;
-    Cart resource = new Cart();
-    BeanUtils.copyProperties(entity, resource);
+    Cart resource = cartMapper.toModel(entity);
+    resource.setItems(itemService.toModelList(entity.getItems()));
 
-    resource
-        .id(cid)
-        .customerId(uid)
-        .items(itemService.toModelList(entity.getItems()));
-
-    resource.add(linkTo(methodOn(CartsController.class).getCartByCustomerId(uid)).withSelfRel());
-    resource.add(linkTo(methodOn(CartsController.class).getCartItemsByCustomerId(uid)).withRel("cart-items"));
+    resource.add(linkTo(methodOn(CartsController.class).getCartByCustomerId(resource.getCustomerId())).withSelfRel());
+    resource.add(linkTo(methodOn(CartsController.class).getCartItemsByCustomerId(resource.getCustomerId()))
+        .withRel("cart-items"));
 
     return resource;
   }

@@ -62,6 +62,12 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
     // Lombok Ends
 
+    // MapStruct Starts
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    // MapStruct Ends
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-flyway'
     implementation 'org.flywaydb:flyway-core'
