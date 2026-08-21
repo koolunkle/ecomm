@@ -26,16 +26,21 @@ public class OrderRepresentationModelAssembler extends
   private final UserRepresentationModelAssembler uAssembler;
   private final AddressRepresentationModelAssembler aAssembler;
   private final CardRepresentationModelAssembler cAssembler;
+  private final ShipmentRepresentationModelAssembler sAssembler;
+  private final PaymentRepresentationModelAssembler pAssembler;
   private final ItemService itemService;
 
   public OrderRepresentationModelAssembler(OrderMapper orderMapper, UserRepresentationModelAssembler uAssembler,
       AddressRepresentationModelAssembler aAssembler, CardRepresentationModelAssembler cAssembler,
-      ShipmentRepresentationModelAssembler sAssembler, ItemService itemService) {
+      ShipmentRepresentationModelAssembler sAssembler, PaymentRepresentationModelAssembler pAssembler,
+      ItemService itemService) {
     super(OrderController.class, Order.class);
     this.orderMapper = orderMapper;
     this.uAssembler = uAssembler;
     this.aAssembler = aAssembler;
     this.cAssembler = cAssembler;
+    this.sAssembler = sAssembler;
+    this.pAssembler = pAssembler;
     this.itemService = itemService;
   }
 
@@ -51,6 +56,13 @@ public class OrderRepresentationModelAssembler extends
         .items(itemService.toModelList(entity.getItems()))
         .date(entity.getOrderDate().toInstant().atOffset(ZoneOffset.UTC))
         .total(entity.getTotal().doubleValue());
+
+    if (entity.getShipment() != null) {
+      resource.shipment(sAssembler.toModel(entity.getShipment()));
+    }
+    if (entity.getPaymentEntity() != null) {
+      resource.payment(pAssembler.toModel(entity.getPaymentEntity()));
+    }
 
     resource.add(linkTo(methodOn(OrderController.class).getOrdersByOrderId(entity.getId().toString())).withSelfRel());
 
