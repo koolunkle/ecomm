@@ -1,19 +1,25 @@
 package com.example.ecomm.service;
 
-import java.util.Optional;
+import java.util.UUID;
 
 import com.example.ecomm.entity.CardEntity;
 import com.example.ecomm.model.AddCardReq;
 
 import jakarta.validation.Valid;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface CardService {
-  
-  void deleteCardById(String id);
 
-  Iterable<CardEntity> getAllCards();
+  Mono<Void> deleteCardById(String id);
 
-  Optional<CardEntity> getCardById(String id);
+  Mono<Void> deleteCardById(UUID id);
 
-  Optional<CardEntity> registerCard(@Valid AddCardReq addCardReq);
+  Flux<CardEntity> getAllCards();
+
+  Mono<CardEntity> getCardById(String id);
+
+  Mono<CardEntity> registerCard(@Valid Mono<AddCardReq> addCardReq);
+
+  CardEntity toEntity(AddCardReq model);
 }

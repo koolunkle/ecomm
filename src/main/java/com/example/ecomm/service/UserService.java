@@ -1,20 +1,25 @@
 package com.example.ecomm.service;
 
-import java.util.Optional;
+import java.util.UUID;
 
 import com.example.ecomm.entity.AddressEntity;
 import com.example.ecomm.entity.CardEntity;
 import com.example.ecomm.entity.UserEntity;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 public interface UserService {
-  
-  void deleteCustomerById(String id);
 
-  Optional<Iterable<AddressEntity>> getAddressesByCustomerId(String id);
+  Mono<Void> deleteCustomerById(String id);
 
-  Iterable<UserEntity> getAllCustomers();
+  Mono<Void> deleteCustomerById(UUID id);
 
-  Optional<CardEntity> getCardByCustomerId(String id);
+  Flux<AddressEntity> getAddressesByCustomerId(String id);
 
-  Optional<UserEntity> getCustomerById(String id);
+  Flux<UserEntity> getAllCustomers();
+
+  Mono<CardEntity> getCardByCustomerId(String id);
+
+  Mono<UserEntity> getCustomerById(String id);
 }

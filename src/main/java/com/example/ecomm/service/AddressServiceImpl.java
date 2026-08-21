@@ -1,49 +1,47 @@
 package com.example.ecomm.service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.example.ecomm.entity.AddressEntity;
+import com.example.ecomm.mapper.AddressMapper;
 import com.example.ecomm.model.AddAddressReq;
 import com.example.ecomm.repository.AddressRepository;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
 
   private final AddressRepository repository;
+  private final AddressMapper mapper;
 
   @Override
-  public Optional<AddressEntity> createAddress(AddAddressReq addAddressReq) {
-    return Optional.of(repository.save(toEntity(addAddressReq)));
+  public Mono<AddressEntity> createAddress(Mono<AddAddressReq> addAddressReq) {
+    return addAddressReq.map(mapper::toEntity).flatMap(repository::save);
   }
 
   @Override
-  public void deleteAddressesById(String id) {
-    repository.deleteById(UUID.fromString(id));
+  public Mono<Void> deleteAddressesById(String id) {
+    return deleteAddressesById(UUID.fromString(id));
   }
 
   @Override
-  public Optional<AddressEntity> getAddressesById(String id) {
+  public Mono<Void> deleteAddressesById(UUID id) {
+    return repository.deleteById(id);
+  }
+
+  @Override
+  public Mono<AddressEntity> getAddressesById(String id) {
     return repository.findById(UUID.fromString(id));
   }
 
   @Override
-  public Iterable<AddressEntity> getAllAddresses() {
+  public Flux<AddressEntity> getAllAddresses() {
     return repository.findAll();
-  }
-
-  private AddressEntity toEntity(AddAddressReq model) {
-    AddressEntity entity = new AddressEntity();
-
-    return entity
-        .setNumber(model.getNumber())
-        .setResidency(model.getResidency())
-        .setStreet(model.getStreet()).setCity(model.getCity()).setState(model.getState())
-        .setCountry(model.getCountry()).setPincode(model.getPincode());
   }
 }

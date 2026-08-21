@@ -1,6 +1,5 @@
 package com.example.ecomm.service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +10,7 @@ import com.example.ecomm.model.PaymentReq;
 import com.example.ecomm.repository.AuthorizationRepository;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 @Service
 @Validated
@@ -20,12 +20,12 @@ public class PaymentServiceImpl implements PaymentService {
   private final AuthorizationRepository authorizationRepo;
 
   @Override
-  public Optional<AuthorizationEntity> authorize(PaymentReq paymentReq) {
-    return Optional.empty();
+  public Mono<AuthorizationEntity> authorize(Mono<PaymentReq> paymentReq) {
+    return Mono.empty();
   }
 
   @Override
-  public Optional<AuthorizationEntity> getOrdersPaymentAuthorization(String orderId) {
+  public Mono<AuthorizationEntity> getOrdersPaymentAuthorization(String orderId) {
     return authorizationRepo.findByOrderEntityId(UUID.fromString(orderId));
   }
 }

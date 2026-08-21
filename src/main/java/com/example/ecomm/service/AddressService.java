@@ -1,17 +1,22 @@
 package com.example.ecomm.service;
 
-import java.util.Optional;
+import java.util.UUID;
 
 import com.example.ecomm.entity.AddressEntity;
 import com.example.ecomm.model.AddAddressReq;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 public interface AddressService {
-  
-  Optional<AddressEntity> createAddress(AddAddressReq addAddressReq);
 
-  void deleteAddressesById(String id);
+  Mono<AddressEntity> createAddress(Mono<AddAddressReq> addAddressReq);
 
-  Optional<AddressEntity> getAddressesById(String id);
+  Mono<Void> deleteAddressesById(String id);
 
-  Iterable<AddressEntity> getAllAddresses();
+  Mono<Void> deleteAddressesById(UUID id);
+
+  Mono<AddressEntity> getAddressesById(String id);
+
+  Flux<AddressEntity> getAllAddresses();
 }

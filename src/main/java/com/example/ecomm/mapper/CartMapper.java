@@ -12,7 +12,7 @@ import com.example.ecomm.model.Cart;
 public interface CartMapper {
 
   @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-  @Mapping(target = "customerId", source = "user.id")
+  @Mapping(target = "customerId", source = "userId")
   @Mapping(target = "items", ignore = true)
   Cart toModel(CartEntity entity);
 }
