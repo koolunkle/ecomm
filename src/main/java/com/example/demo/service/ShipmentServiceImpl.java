@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +19,6 @@ public class ShipmentServiceImpl implements ShipmentService {
 
   @Override
   public Iterable<ShipmentEntity> getShipmentByOrderId(String id) {
-    return repository.findAllById(List.of(UUID.fromString(id)));
+    return repository.getShipmentByOrderId(UUID.fromString(id));
   }
 }
