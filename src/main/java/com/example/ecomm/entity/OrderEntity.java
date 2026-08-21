@@ -6,22 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
 import com.example.ecomm.model.Order.StatusEnum;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,46 +20,52 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(of = "id")
-@Entity
-@Table(name = "orders")
+@Table("ecomm.orders")
 public class OrderEntity {
 
   @Id
-  @GeneratedValue
-  @Column(name = "ID", updatable = false, nullable = false)
+  @Column("id")
   private UUID id;
 
-  @Column(name = "TOTAL")
-  private BigDecimal total;
+  @Column("customer_id")
+  private UUID customerId;
 
-  @Column(name = "STATUS")
-  @Enumerated(EnumType.STRING)
-  private StatusEnum status;
+  @Column("address_id")
+  private UUID addressId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "CUSTOMER_ID", nullable = false)
-  private UserEntity userEntity;
+  @Column("card_id")
+  private UUID cardId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID")
-  private AddressEntity addressEntity;
-
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "PAYMENT_ID", referencedColumnName = "ID")
-  private PaymentEntity paymentEntity;
-
-  @JoinColumn(name = "SHIPMENT_ID", referencedColumnName = "ID")
-  @OneToOne
-  private ShipmentEntity shipment;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "CARD_ID", referencedColumnName = "ID")
-  private CardEntity cardEntity;
-
-  @Column(name = "ORDER_DATE")
+  @Column("order_date")
   private Timestamp orderDate;
 
-  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-  @JoinTable(name = "ORDER_ITEM", joinColumns = @JoinColumn(name = "ORDER_ID"), inverseJoinColumns = @JoinColumn(name = "ITEM_ID"))
+  @Column("total")
+  private BigDecimal total;
+
+  @Column("payment_id")
+  private UUID paymentId;
+
+  @Column("shipment_id")
+  private UUID shipmentId;
+
+  @Column("status")
+  private StatusEnum status;
+
+  @Transient
+  private UserEntity userEntity;
+
+  @Transient
+  private AddressEntity addressEntity;
+
+  @Transient
+  private PaymentEntity paymentEntity;
+
+  @Transient
+  private ShipmentEntity shipment;
+
+  @Transient
+  private CardEntity cardEntity;
+
+  @Transient
   private List<ItemEntity> items = new ArrayList<>();
 }

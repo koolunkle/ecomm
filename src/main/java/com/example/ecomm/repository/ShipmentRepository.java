@@ -2,14 +2,15 @@ package com.example.ecomm.repository;
 
 import java.util.UUID;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import com.example.ecomm.entity.ShipmentEntity;
 
-public interface ShipmentRepository extends CrudRepository<ShipmentEntity, UUID> {
+import reactor.core.publisher.Flux;
 
-    @Query(value = "select s.* from ecomm.orders o, ecomm.shipment s where o.shipment_id = s.id and o.id = :orderId", nativeQuery = true)
-    Iterable<ShipmentEntity> getShipmentByOrderId(@Param("orderId") UUID orderId);
+public interface ShipmentRepository extends ReactiveCrudRepository<ShipmentEntity, UUID> {
+
+    @Query("select s.* from ecomm.orders o, ecomm.shipment s where o.shipment_id = s.id and o.id = :orderId")
+    Flux<ShipmentEntity> getShipmentByOrderId(UUID orderId);
 }

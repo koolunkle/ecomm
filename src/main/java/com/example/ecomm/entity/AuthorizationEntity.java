@@ -3,41 +3,34 @@ package com.example.ecomm.entity;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "authorizations")
+@Table("ecomm.authorizations")
 public class AuthorizationEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "ID", updatable = false, nullable = false)
+    @Column("id")
     private UUID id;
 
-    @Column(name = "AUTHORIZED")
+    @Column("order_id")
+    private UUID orderId;
+
+    @Column("authorized")
     private boolean authorized;
 
-    @Column(name = "TIME")
+    @Column("time")
     private Timestamp time;
 
-    @Column(name = "MESSAGE")
+    @Column("message")
     private String message;
 
-    @Column(name = "ERROR")
+    @Column("error")
     private String error;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ORDER_ID", referencedColumnName = "id")
-    private OrderEntity orderEntity;
 }

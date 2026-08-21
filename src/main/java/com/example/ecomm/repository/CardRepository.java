@@ -2,9 +2,13 @@ package com.example.ecomm.repository;
 
 import java.util.UUID;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import com.example.ecomm.entity.CardEntity;
 
-public interface CardRepository extends CrudRepository<CardEntity, UUID> {
+import reactor.core.publisher.Mono;
+
+public interface CardRepository extends ReactiveCrudRepository<CardEntity, UUID> {
+
+    Mono<CardEntity> findByUserId(UUID userId);
 }

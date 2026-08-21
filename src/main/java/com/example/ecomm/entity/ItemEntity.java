@@ -1,18 +1,13 @@
 package com.example.ecomm.entity;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,28 +17,22 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(of = "id")
-@Entity
-@Table(name = "item")
+@Table("ecomm.item")
 public class ItemEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "ID", updatable = false, nullable = false)
+    @Column("id")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
+    @Column("product_id")
+    private UUID productId;
+
+    @Transient
     private ProductEntity product;
 
-    @Column(name = "UNIT_PRICE")
+    @Column("unit_price")
     private BigDecimal price;
 
-    @Column(name = "QUANTITY")
+    @Column("quantity")
     private int quantity;
-
-    @ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
-    private List<CartEntity> cart;
-
-    @ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
-    private List<OrderEntity> orders;
 }

@@ -1,72 +1,52 @@
 package com.example.ecomm.entity;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "users")
+@Table("ecomm.users")
 public class UserEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "ID", updatable = false, nullable = false)
+    @Column("id")
     private UUID id;
 
     @NotNull(message = "User name is required.")
-    @Basic(optional = false)
-    @Column(name = "USERNAME")
+    @Column("username")
     private String username;
 
-    @Column(name = "PASSWORD")
+    @Column("password")
     private String password;
 
-    @Column(name = "FIRST_NAME")
+    @Column("first_name")
     private String firstName;
 
-    @Column(name = "LAST_NAME")
+    @Column("last_name")
     private String lastName;
 
-    @Column(name = "EMAIL")
+    @Column("email")
     private String email;
 
-    @Column(name = "PHONE")
+    @Column("phone")
     private String phone;
 
-    @Column(name = "USER_STATUS")
+    @Column("user_status")
     private String userStatus;
 
-    // Set (not List) so that addresses and cards can be join-fetched together in one query -
-    // Hibernate can't join-fetch more than one List/bag-typed collection in a single query.
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "USER_ADDRESS", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID"))
+    @Transient
     private Set<AddressEntity> addresses = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    @Transient
     private Set<CardEntity> cards;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
-    private CartEntity cart;
-
-    @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<OrderEntity> orders;
 }

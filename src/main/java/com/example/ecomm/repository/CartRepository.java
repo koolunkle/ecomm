@@ -1,18 +1,16 @@
 package com.example.ecomm.repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import com.example.ecomm.entity.CartEntity;
 
-public interface CartRepository extends CrudRepository<CartEntity, UUID> {
+import reactor.core.publisher.Mono;
 
-    @EntityGraph(attributePaths = "items")
-    @Query("select c from CartEntity c join c.user u where u.id = :customerId")
-    public Optional<CartEntity> findByCustomerId(@Param("customerId") UUID customerId);
+public interface CartRepository extends ReactiveCrudRepository<CartEntity, UUID> {
+
+    @Query("select c.* from ecomm.cart c, ecomm.users u where c.user_id = u.id and u.id = :customerId")
+    Mono<CartEntity> findByCustomerId(UUID customerId);
 }

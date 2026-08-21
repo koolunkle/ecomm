@@ -1,15 +1,11 @@
 package com.example.ecomm.entity;
 
-import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,36 +15,31 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(of = "id")
-@Entity
-@Table(name = "address")
+@Table("ecomm.address")
 public class AddressEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "ID", updatable = false, nullable = false)
+    @Column("id")
     private UUID id;
 
-    @Column(name = "NUMBER")
+    @Column("number")
     private String number;
 
-    @Column(name = "RESIDENCY")
+    @Column("residency")
     private String residency;
 
-    @Column(name = "STREET")
+    @Column("street")
     private String street;
 
-    @Column(name = "CITY")
+    @Column("city")
     private String city;
 
-    @Column(name = "STATE")
+    @Column("state")
     private String state;
 
-    @Column(name = "COUNTRY")
+    @Column("country")
     private String country;
 
-    @Column(name = "PINCODE")
+    @Column("pincode")
     private String pincode;
-
-    @OneToMany(mappedBy = "addressEntity", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<OrderEntity> orders;
 }

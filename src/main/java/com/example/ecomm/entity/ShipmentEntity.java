@@ -3,28 +3,25 @@ package com.example.ecomm.entity;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "shipment")
+@Table("ecomm.shipment")
 public class ShipmentEntity {
 
   @Id
-  @GeneratedValue
-  @Column(name = "ID", updatable = false, nullable = false)
+  @Column("id")
   private UUID id;
 
-  @Column(name = "EST_DELIVERY_DATE")
+  @Column("est_delivery_date")
   private Timestamp estDeliveryDate;
 
-  @Column(name = "CARRIER")
+  @Column("carrier")
   private String carrier;
 }

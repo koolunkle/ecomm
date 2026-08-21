@@ -1,13 +1,16 @@
 package com.example.ecomm.repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import com.example.ecomm.entity.AuthorizationEntity;
 
-public interface AuthorizationRepository extends CrudRepository<AuthorizationEntity, UUID> {
+import reactor.core.publisher.Mono;
 
-    Optional<AuthorizationEntity> findByOrderEntityId(UUID orderId);
+public interface AuthorizationRepository extends ReactiveCrudRepository<AuthorizationEntity, UUID> {
+
+    @Query("select * from ecomm.authorizations where order_id = :orderId")
+    Mono<AuthorizationEntity> findByOrderEntityId(UUID orderId);
 }

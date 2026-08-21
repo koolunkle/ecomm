@@ -13,16 +13,16 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Table("ecomm.payment")
-public class PaymentEntity {
+@Table("ecomm.order_item")
+public class OrderItemEntity {
 
   @Id
   @Column("id")
   private UUID id;
 
-  @Column("authorized")
-  private boolean authorized;
+  @Column("order_id")
+  private UUID orderId;
 
-  @Column("message")
-  private String message;
+  @Column("item_id")
+  private UUID itemId;
 }

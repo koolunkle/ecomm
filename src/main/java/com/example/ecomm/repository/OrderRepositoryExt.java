@@ -1,11 +1,11 @@
 package com.example.ecomm.repository;
 
-import java.util.Optional;
-
 import com.example.ecomm.entity.OrderEntity;
 import com.example.ecomm.model.NewOrder;
 
+import reactor.core.publisher.Mono;
+
 public interface OrderRepositoryExt {
 
-    Optional<OrderEntity> insert(NewOrder m);
+    Mono<OrderEntity> insert(NewOrder m);
 }
