@@ -1,12 +1,9 @@
 package com.example.ecomm.controller;
 
-import static org.springframework.http.ResponseEntity.notFound;
-
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 
 import com.example.ecomm.AddressApi;
 import com.example.ecomm.hateoas.AddressRepresentationModelAssembler;
@@ -15,6 +12,8 @@ import com.example.ecomm.model.Address;
 import com.example.ecomm.service.AddressService;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,28 +23,28 @@ public class AddressController implements AddressApi {
   private final AddressRepresentationModelAssembler assembler;
 
   @Override
-  public ResponseEntity<Address> createAddress(AddAddressReq addAddressReq) {
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(service.createAddress(addAddressReq).map(assembler::toModel).get());
+  public Mono<ResponseEntity<Address>> createAddress(Mono<AddAddressReq> addAddressReq,
+      ServerWebExchange exchange) {
+    return service.createAddress(addAddressReq)
+        .map(entity -> assembler.entityToModel(entity, exchange))
+        .map(model -> ResponseEntity.status(HttpStatus.CREATED).body(model));
   }
 
   @Override
-  public ResponseEntity<Void> deleteAddressesById(String id) {
-    service.deleteAddressesById(id);
-    return ResponseEntity.accepted().build();
+  public Mono<ResponseEntity<Void>> deleteAddressesById(String id, ServerWebExchange exchange) {
+    return service.deleteAddressesById(id).thenReturn(ResponseEntity.accepted().build());
   }
 
   @Override
-  public ResponseEntity<Address> getAddressesById(String id) {
+  public Mono<ResponseEntity<Address>> getAddressesById(String id, ServerWebExchange exchange) {
     return service.getAddressesById(id)
-        .map(assembler::toModel)
+        .map(entity -> assembler.entityToModel(entity, exchange))
         .map(ResponseEntity::ok)
-        .orElse(notFound().build());
+        .defaultIfEmpty(ResponseEntity.notFound().build());
   }
 
   @Override
-  public ResponseEntity<List<Address>> getAllAddresses() {
-    return ResponseEntity.ok(assembler.toListModel(service.getAllAddresses()));
+  public Mono<ResponseEntity<Flux<Address>>> getAllAddresses(ServerWebExchange exchange) {
+    return Mono.just(ResponseEntity.ok(assembler.toListModel(service.getAllAddresses(), exchange)));
   }
 }

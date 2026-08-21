@@ -1,19 +1,24 @@
 package com.example.ecomm.controller;
 
-import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 
 import com.example.ecomm.CartApi;
+import com.example.ecomm.exception.ItemNotFoundException;
 import com.example.ecomm.hateoas.CartRepresentationModelAssembler;
 import com.example.ecomm.model.Cart;
 import com.example.ecomm.model.Item;
 import com.example.ecomm.service.CartService;
+import com.example.ecomm.service.ItemService;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,44 +26,57 @@ public class CartsController implements CartApi {
 
     private static final Logger log = LoggerFactory.getLogger(CartsController.class);
     private final CartService service;
+    private final ItemService itemService;
     private final CartRepresentationModelAssembler assembler;
 
     @Override
-    public ResponseEntity<List<Item>> addCartItemsByCustomerId(String customerId, Item item) {
-        log.info("Request for customer ID: {}\nItem: {}", customerId, item);
-        return ResponseEntity.ok(service.addCartItemsByCustomerId(customerId, item));
+    public Mono<ResponseEntity<Flux<Item>>> addCartItemsByCustomerId(String customerId, Mono<Item> item,
+            ServerWebExchange exchange) {
+        log.info("Request for customer ID: {}", customerId);
+        return Mono.just(ResponseEntity.ok(service.addCartItemsByCustomerId(customerId, item)));
     }
 
     @Override
-    public ResponseEntity<List<Item>> addOrReplaceItemsByCustomerId(String customerId,
-            Item item) {
-        return ResponseEntity.ok(service.addOrReplaceItemsByCustomerId(customerId, item));
+    public Mono<ResponseEntity<Flux<Item>>> addOrReplaceItemsByCustomerId(String customerId, Mono<Item> item,
+            ServerWebExchange exchange) {
+        return Mono.just(ResponseEntity.ok(service.addOrReplaceItemsByCustomerId(customerId, item)));
     }
 
     @Override
-    public ResponseEntity<Void> deleteCart(String customerId) {
-        service.deleteCart(customerId);
-        return ResponseEntity.accepted().build();
+    public Mono<ResponseEntity<Void>> deleteCart(String customerId, ServerWebExchange exchange) {
+        return service.deleteCart(customerId).thenReturn(ResponseEntity.accepted().build());
     }
 
     @Override
-    public ResponseEntity<Void> deleteItemFromCart(String customerId, String itemId) {
-        service.deleteItemFromCart(customerId, itemId);
-        return ResponseEntity.accepted().build();
+    public Mono<ResponseEntity<Void>> deleteItemFromCart(String customerId, String itemId,
+            ServerWebExchange exchange) {
+        return service.deleteItemFromCart(customerId, itemId).thenReturn(ResponseEntity.accepted().build());
     }
 
     @Override
-    public ResponseEntity<Cart> getCartByCustomerId(String customerId) {
-        return ResponseEntity.ok(assembler.toModel(service.getCartByCustomerId(customerId)));
+    public Mono<ResponseEntity<Cart>> getCartByCustomerId(String customerId, ServerWebExchange exchange) {
+        return service.getCartByCustomerId(customerId)
+                .map(entity -> assembler.entityToModel(entity, exchange))
+                .map(ResponseEntity::ok);
     }
 
     @Override
-    public ResponseEntity<List<Item>> getCartItemsByCustomerId(String customerId) {
-        return ResponseEntity.ok(service.getCartItemsByCustomerId(customerId));
+    public Mono<ResponseEntity<Flux<Item>>> getCartItemsByCustomerId(String customerId, ServerWebExchange exchange) {
+        return service.getCartByCustomerId(customerId)
+                .map(cart -> Flux.fromIterable(itemService.toModelList(cart.getItems())))
+                .map(ResponseEntity::ok);
     }
 
     @Override
-    public ResponseEntity<Item> getCartItemsByItemId(String customerId, String itemId) {
-        return ResponseEntity.ok(service.getCartItemsByItemId(customerId, itemId));
+    public Mono<ResponseEntity<Item>> getCartItemsByItemId(String customerId, String itemId,
+            ServerWebExchange exchange) {
+        return service.getCartByCustomerId(customerId)
+                .flatMap(cart -> cart.getItems().stream()
+                        .filter(i -> i.getProductId().equals(UUID.fromString(itemId)))
+                        .findFirst()
+                        .map(itemService::toModel)
+                        .map(Mono::just)
+                        .orElseGet(() -> Mono.error(new ItemNotFoundException(String.format(" - %s", itemId)))))
+                .map(ResponseEntity::ok);
     }
 }
