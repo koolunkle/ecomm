@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -34,11 +33,11 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.GENERIC_ERROR,
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ErrorCode.GENERIC_ERROR.getHttpStatus().value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, ErrorCode.GENERIC_ERROR.getHttpStatus());
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
@@ -52,11 +51,11 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.HTTP_MEDIATYPE_NOT_SUPPORTED,
-                HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+                ErrorCode.HTTP_MEDIATYPE_NOT_SUPPORTED.getHttpStatus().value(),
                 request.getRequestURI(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        return new ResponseEntity<>(error, ErrorCode.HTTP_MEDIATYPE_NOT_SUPPORTED.getHttpStatus());
     }
 
     @ExceptionHandler(HttpMessageNotWritableException.class)
@@ -70,11 +69,11 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.HTTP_MESSAGE_NOT_WRITABLE,
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ErrorCode.HTTP_MESSAGE_NOT_WRITABLE.getHttpStatus().value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, ErrorCode.HTTP_MESSAGE_NOT_WRITABLE.getHttpStatus());
     }
 
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
@@ -88,11 +87,11 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE,
-                HttpStatus.NOT_ACCEPTABLE.value(),
+                ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE.getHttpStatus().value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(error, ErrorCode.HTTP_MEDIA_TYPE_NOT_ACCEPTABLE.getHttpStatus());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -106,11 +105,11 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.HTTP_MESSAGE_NOT_READABLE,
-                HttpStatus.BAD_REQUEST.value(),
+                ErrorCode.HTTP_MESSAGE_NOT_READABLE.getHttpStatus().value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, ErrorCode.HTTP_MESSAGE_NOT_READABLE.getHttpStatus());
     }
 
     @ExceptionHandler(JsonParseException.class)
@@ -124,11 +123,11 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.JSON_PARSE_ERROR,
-                HttpStatus.BAD_REQUEST.value(),
+                ErrorCode.JSON_PARSE_ERROR.getHttpStatus().value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, ErrorCode.JSON_PARSE_ERROR.getHttpStatus());
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -142,11 +141,11 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.RESOURCE_NOT_FOUND,
-                HttpStatus.NOT_FOUND.value(),
+                ErrorCode.RESOURCE_NOT_FOUND.getHttpStatus().value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, ErrorCode.RESOURCE_NOT_FOUND.getHttpStatus());
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)
@@ -160,11 +159,11 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.CUSTOMER_NOT_FOUND,
-                HttpStatus.NOT_FOUND.value(),
+                ErrorCode.CUSTOMER_NOT_FOUND.getHttpStatus().value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, ErrorCode.CUSTOMER_NOT_FOUND.getHttpStatus());
     }
 
     @ExceptionHandler(ItemNotFoundException.class)
@@ -178,11 +177,11 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.ITEM_NOT_FOUND,
-                HttpStatus.NOT_FOUND.value(),
+                ErrorCode.ITEM_NOT_FOUND.getHttpStatus().value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, ErrorCode.ITEM_NOT_FOUND.getHttpStatus());
     }
 
     @ExceptionHandler(GenericAlreadyExistsException.class)
@@ -196,10 +195,10 @@ public class RestApiErrorHandler {
                 messageSource,
                 locale,
                 ErrorCode.GENERIC_ALREADY_EXISTS,
-                HttpStatus.CONFLICT.value(),
+                ErrorCode.GENERIC_ALREADY_EXISTS.getHttpStatus().value(),
                 request.getRequestURL().toString(),
                 request.getMethod());
 
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(error, ErrorCode.GENERIC_ALREADY_EXISTS.getHttpStatus());
     }
 }
