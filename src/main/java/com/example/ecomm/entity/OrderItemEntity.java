@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Table("ecomm.order_item")
+@Table(name = "order_item", schema = "ecomm")
 public class OrderItemEntity {
 
   @Id

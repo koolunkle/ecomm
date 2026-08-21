@@ -10,7 +10,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.example.ecomm.entity.ItemEntity;
-import com.example.ecomm.entity.ProductEntity;
 import com.example.ecomm.model.Item;
 
 @Service
@@ -20,7 +19,7 @@ public class ItemServiceImpl implements ItemService {
   public ItemEntity toEntity(Item m) {
     ItemEntity e = new ItemEntity();
 
-    e.setProduct(new ProductEntity().setId(UUID.fromString(m.getId())))
+    e.setProductId(UUID.fromString(m.getId()))
         .setPrice(BigDecimal.valueOf(m.getUnitPrice()))
         .setQuantity(m.getQuantity());
 
@@ -40,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
   public Item toModel(ItemEntity e) {
     Item m = new Item();
 
-    m.id(e.getProduct().getId().toString())
+    m.id(e.getProductId().toString())
         .unitPrice(e.getPrice().doubleValue())
         .quantity(e.getQuantity());
 

@@ -20,7 +20,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(of = "id")
-@Table("ecomm.orders")
+@Table(name = "orders", schema = "ecomm")
 public class OrderEntity {
 
   @Id

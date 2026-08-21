@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@Table("ecomm.payment")
+@Table(name = "payment", schema = "ecomm")
 public class PaymentEntity {
 
   @Id

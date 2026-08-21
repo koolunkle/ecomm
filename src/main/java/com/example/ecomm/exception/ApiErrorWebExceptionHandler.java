@@ -42,10 +42,7 @@ public class ApiErrorWebExceptionHandler extends AbstractErrorWebExceptionHandle
 
     private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
         Map<String, Object> errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
-
-        Throwable throwable = (Throwable) request
-                .attribute("org.springframework.boot.web.reactive.error.DefaultErrorAttributes.ERROR")
-                .orElseThrow(() -> new IllegalStateException("ServerWebExchange에서 예외 속성이 누락됨"));
+        Throwable throwable = getError(request);
 
         if (throwable instanceof ResponseStatusException responseStatusException) {
             HttpStatus status = HttpStatus.valueOf(responseStatusException.getStatusCode().value());

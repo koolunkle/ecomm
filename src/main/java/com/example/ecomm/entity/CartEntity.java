@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@Table("ecomm.cart")
+@Table(name = "cart", schema = "ecomm")
 public class CartEntity {
 
     @Id

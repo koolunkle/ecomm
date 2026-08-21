@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(of = "id")
-@Table("ecomm.item")
+@Table(name = "item", schema = "ecomm")
 public class ItemEntity {
 
     @Id

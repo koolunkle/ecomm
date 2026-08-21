@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Table("ecomm.authorizations")
+@Table(name = "authorizations", schema = "ecomm")
 public class AuthorizationEntity {
 
     @Id
