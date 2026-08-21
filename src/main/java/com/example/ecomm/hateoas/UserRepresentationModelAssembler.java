@@ -1,50 +1,63 @@
 package com.example.ecomm.hateoas;
 
-import static java.util.stream.Collectors.toList;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
 
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.reactive.ReactiveRepresentationModelAssembler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
 
-import com.example.ecomm.controller.CustomerController;
 import com.example.ecomm.entity.UserEntity;
 import com.example.ecomm.mapper.UserMapper;
 import com.example.ecomm.model.User;
 
+import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@RequiredArgsConstructor
 @Component
-public class UserRepresentationModelAssembler extends
-    RepresentationModelAssemblerSupport<UserEntity, User> {
+public class UserRepresentationModelAssembler implements
+    ReactiveRepresentationModelAssembler<UserEntity, User>, HateoasSupport {
+
+  private static String serverUri = null;
 
   private final UserMapper userMapper;
 
-  public UserRepresentationModelAssembler(UserMapper userMapper) {
-    super(CustomerController.class, User.class);
-    this.userMapper = userMapper;
+  private String getServerUri(ServerWebExchange exchange) {
+    if (Strings.isBlank(serverUri)) {
+      serverUri = getUriComponentBuilder(exchange).toUriString();
+    }
+    return serverUri;
   }
 
   @Override
-  public User toModel(UserEntity entity) {
+  public Mono<User> toModel(UserEntity entity, ServerWebExchange exchange) {
+    return Mono.just(entityToModel(entity, exchange));
+  }
+
+  public User entityToModel(UserEntity entity, ServerWebExchange exchange) {
     User resource = userMapper.toModel(entity);
 
-    resource.add(linkTo(methodOn(CustomerController.class).getCustomerById(entity.getId().toString())).withSelfRel());
-    resource.add(linkTo(methodOn(CustomerController.class).getAllCustomers()).withRel("customers"));
-    resource.add(linkTo(methodOn(CustomerController.class).getAddressesByCustomerId(entity.getId().toString()))
+    if (resource == null) {
+      return new User();
+    }
+
+    String serverUri = getServerUri(exchange);
+
+    resource.add(Link.of(String.format("%s/api/v1/customers", serverUri)).withRel("customers"));
+    resource.add(Link.of(String.format("%s/api/v1/customers/%s", serverUri, entity.getId())).withSelfRel());
+    resource.add(Link.of(String.format("%s/api/v1/customers/%s/addresses", serverUri, entity.getId()))
         .withRel("self_addresses"));
 
     return resource;
   }
 
-  public List<User> toListModel(Iterable<UserEntity> entities) {
+  public Flux<User> toListModel(Flux<UserEntity> entities, ServerWebExchange exchange) {
     if (Objects.isNull(entities)) {
-      return List.of();
+      return Flux.empty();
     }
-
-    return StreamSupport.stream(entities.spliterator(), false).map(this::toModel)
-        .collect(toList());
+    return Flux.from(entities.map(e -> entityToModel(e, exchange)));
   }
 }

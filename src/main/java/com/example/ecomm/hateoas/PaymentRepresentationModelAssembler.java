@@ -1,48 +1,61 @@
 package com.example.ecomm.hateoas;
 
-import static java.util.stream.Collectors.toList;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
 
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.reactive.ReactiveRepresentationModelAssembler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
 
-import com.example.ecomm.controller.PaymentController;
 import com.example.ecomm.entity.PaymentEntity;
 import com.example.ecomm.mapper.PaymentMapper;
 import com.example.ecomm.model.Payment;
 
+import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@RequiredArgsConstructor
 @Component
-public class PaymentRepresentationModelAssembler extends
-    RepresentationModelAssemblerSupport<PaymentEntity, Payment> {
+public class PaymentRepresentationModelAssembler implements
+    ReactiveRepresentationModelAssembler<PaymentEntity, Payment>, HateoasSupport {
+
+  private static String serverUri = null;
 
   private final PaymentMapper paymentMapper;
 
-  public PaymentRepresentationModelAssembler(PaymentMapper paymentMapper) {
-    super(PaymentController.class, Payment.class);
-    this.paymentMapper = paymentMapper;
+  private String getServerUri(ServerWebExchange exchange) {
+    if (Strings.isBlank(serverUri)) {
+      serverUri = getUriComponentBuilder(exchange).toUriString();
+    }
+    return serverUri;
   }
 
   @Override
-  public Payment toModel(PaymentEntity entity) {
+  public Mono<Payment> toModel(PaymentEntity entity, ServerWebExchange exchange) {
+    return Mono.just(entityToModel(entity, exchange));
+  }
+
+  public Payment entityToModel(PaymentEntity entity, ServerWebExchange exchange) {
     Payment resource = paymentMapper.toModel(entity);
 
-    resource.add(linkTo(methodOn(PaymentController.class).getOrdersPaymentAuthorization(entity.getId().toString()))
-        .withSelfRel());
+    if (resource == null) {
+      return new Payment();
+    }
+
+    String serverUri = getServerUri(exchange);
+
+    resource.add(Link.of(String.format("%s/api/v1/payments", serverUri)).withRel("payments"));
+    resource.add(Link.of(String.format("%s/api/v1/payments/%s", serverUri, entity.getId())).withSelfRel());
 
     return resource;
   }
 
-  public List<Payment> toListModel(Iterable<PaymentEntity> entities) {
+  public Flux<Payment> toListModel(Flux<PaymentEntity> entities, ServerWebExchange exchange) {
     if (Objects.isNull(entities)) {
-      return List.of();
+      return Flux.empty();
     }
-
-    return StreamSupport.stream(entities.spliterator(), false).map(this::toModel)
-        .collect(toList());
+    return Flux.from(entities.map(e -> entityToModel(e, exchange)));
   }
 }

@@ -1,53 +1,65 @@
 package com.example.ecomm.hateoas;
 
-import static java.util.stream.Collectors.toList;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
 
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.reactive.ReactiveRepresentationModelAssembler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
 
-import com.example.ecomm.controller.CartsController;
 import com.example.ecomm.entity.CartEntity;
 import com.example.ecomm.mapper.CartMapper;
 import com.example.ecomm.model.Cart;
 import com.example.ecomm.service.ItemService;
 
-@Component
-public class CartRepresentationModelAssembler extends
-    RepresentationModelAssemblerSupport<CartEntity, Cart> {
+import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-  private final CartMapper cartMapper;
+@RequiredArgsConstructor
+@Component
+public class CartRepresentationModelAssembler implements
+    ReactiveRepresentationModelAssembler<CartEntity, Cart>, HateoasSupport {
+
+  private static String serverUri = null;
+
   private final ItemService itemService;
 
-  public CartRepresentationModelAssembler(CartMapper cartMapper, ItemService itemService) {
-    super(CartsController.class, Cart.class);
-    this.cartMapper = cartMapper;
-    this.itemService = itemService;
+  private final CartMapper cartMapper;
+
+  private String getServerUri(ServerWebExchange exchange) {
+    if (Strings.isBlank(serverUri)) {
+      serverUri = getUriComponentBuilder(exchange).toUriString();
+    }
+    return serverUri;
   }
 
   @Override
-  public Cart toModel(CartEntity entity) {
-    Cart resource = cartMapper.toModel(entity);
-    resource.setItems(itemService.toModelList(entity.getItems()));
+  public Mono<Cart> toModel(CartEntity entity, ServerWebExchange exchange) {
+    return Mono.just(entityToModel(entity, exchange));
+  }
 
-    resource.add(linkTo(methodOn(CartsController.class).getCartByCustomerId(resource.getCustomerId())).withSelfRel());
-    resource.add(linkTo(methodOn(CartsController.class).getCartItemsByCustomerId(resource.getCustomerId()))
-        .withRel("cart-items"));
+  public Cart entityToModel(CartEntity entity, ServerWebExchange exchange) {
+    Cart resource = cartMapper.toModel(entity);
+
+    if (resource == null) {
+      return new Cart();
+    }
+
+    resource.items(itemService.toModelList(entity.getItems()));
+
+    String serverUri = getServerUri(exchange);
+
+    resource.add(Link.of(String.format("%s/api/v1/carts/%s", serverUri, entity.getId())).withSelfRel());
 
     return resource;
   }
 
-  public List<Cart> toListModel(Iterable<CartEntity> entities) {
+  public Flux<Cart> toListModel(Flux<CartEntity> entities, ServerWebExchange exchange) {
     if (Objects.isNull(entities)) {
-      return List.of();
+      return Flux.empty();
     }
-
-    return StreamSupport.stream(entities.spliterator(), false).map(this::toModel)
-        .collect(toList());
+    return Flux.from(entities.map(e -> entityToModel(e, exchange)));
   }
 }

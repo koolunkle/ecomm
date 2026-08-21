@@ -1,53 +1,61 @@
 package com.example.ecomm.hateoas;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
 
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.reactive.ReactiveRepresentationModelAssembler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
 
-import com.example.ecomm.controller.ProductController;
 import com.example.ecomm.entity.ProductEntity;
 import com.example.ecomm.mapper.ProductMapper;
 import com.example.ecomm.model.Product;
-import com.example.ecomm.model.Tag;
 
+import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@RequiredArgsConstructor
 @Component
-public class ProductRepresentationModelAssembler extends
-    RepresentationModelAssemblerSupport<ProductEntity, Product> {
+public class ProductRepresentationModelAssembler implements
+    ReactiveRepresentationModelAssembler<ProductEntity, Product>, HateoasSupport {
+
+  private static String serverUri = null;
 
   private final ProductMapper productMapper;
 
-  public ProductRepresentationModelAssembler(ProductMapper productMapper) {
-    super(ProductController.class, Product.class);
-    this.productMapper = productMapper;
+  private String getServerUri(ServerWebExchange exchange) {
+    if (Strings.isBlank(serverUri)) {
+      serverUri = getUriComponentBuilder(exchange).toUriString();
+    }
+    return serverUri;
   }
 
   @Override
-  public Product toModel(ProductEntity entity) {
+  public Mono<Product> toModel(ProductEntity entity, ServerWebExchange exchange) {
+    return Mono.just(entityToModel(entity, exchange));
+  }
+
+  public Product entityToModel(ProductEntity entity, ServerWebExchange exchange) {
     Product resource = productMapper.toModel(entity);
 
-    resource.setTag(
-        entity.getTags().stream().map(t -> new Tag().id(t.getId().toString()).name(t.getName())).collect(toSet()));
+    if (resource == null) {
+      return new Product();
+    }
 
-    resource.add(linkTo(methodOn(ProductController.class).getProduct(entity.getId().toString())).withSelfRel());
-    resource.add(linkTo(methodOn(ProductController.class).queryProducts(null, null, 1, 10)).withRel("products"));
+    String serverUri = getServerUri(exchange);
+
+    resource.add(Link.of(String.format("%s/api/v1/products", serverUri)).withRel("products"));
+    resource.add(Link.of(String.format("%s/api/v1/products/%s", serverUri, entity.getId())).withSelfRel());
 
     return resource;
   }
 
-  public List<Product> toListModel(Iterable<ProductEntity> entities) {
+  public Flux<Product> toListModel(Flux<ProductEntity> entities, ServerWebExchange exchange) {
     if (Objects.isNull(entities)) {
-      return List.of();
+      return Flux.empty();
     }
-    
-    return StreamSupport.stream(entities.spliterator(), false).map(this::toModel)
-        .collect(toList());
+    return Flux.from(entities.map(e -> entityToModel(e, exchange)));
   }
 }
