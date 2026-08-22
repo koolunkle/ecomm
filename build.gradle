@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
 	// --- Web: 서블릿 기반 MVC 웹 요청 처리 및 유효성 검증 ---
-	implementation 'org.springframework.boot:spring-boot-starter-webmvc' // Spring MVC (Servlet/Tomcat 기반 웹 계층)
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc' // Servlet/Tomcat 기반 웹 계층
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // Request 유효성 검증
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas' // REST HATEOAS 지원
 
