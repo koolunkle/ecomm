@@ -1,7 +1,9 @@
 package com.example.demo.mapper;
 
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import com.example.demo.entity.OrderEntity;
 import com.example.demo.model.Order;
@@ -9,6 +11,7 @@ import com.example.demo.model.Order;
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
 
+  @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
   @Mapping(target = "customer", ignore = true)
   @Mapping(target = "address", ignore = true)
   @Mapping(target = "card", ignore = true)
