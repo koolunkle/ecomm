@@ -21,10 +21,9 @@ repositories {
 dependencies {
 	// Web: 리액티브 웹 요청 처리 및 유효성 검증
 	implementation 'org.springframework.boot:spring-boot-starter-webflux' // Netty 기반 리액티브 웹
-	implementation 'org.springframework.boot:spring-boot-starter-validation' // Request 유효성 검증
+	implementation 'org.springframework.boot:spring-boot-starter-validation' // 요청 유효성 검증
 	implementation('org.springframework.boot:spring-boot-starter-hateoas') {
-		// spring-boot-starter-hateoas는 기본적으로 webmvc(Tomcat)를 전이 의존성으로 끌고 오는데,
-		// 이게 classpath에 있으면 Spring Boot가 리액티브 대신 서블릿 스택으로 기동해버린다.
+		// webmvc 전이 의존성이 있으면 서블릿 스택으로 기동되므로 제외
 		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-webmvc'
 	} // REST HATEOAS 지원
 
@@ -37,9 +36,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA 데이터 접근
 	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc' // R2DBC 리액티브 데이터 접근
 	implementation 'org.springframework.boot:spring-boot-flyway' // Flyway 부트 연동
-	implementation 'org.flywaydb:flyway-core' // DB 스키마 마이그레이션 (JDBC 기반, R2DBC 전환 후에도 유지)
+	implementation 'org.flywaydb:flyway-core' // DB 스키마 마이그레이션 (R2DBC 전환 후에도 필요)
 	implementation 'org.springframework.boot:spring-boot-h2console' // H2 웹 콘솔
-	runtimeOnly 'com.h2database:h2' // H2 JDBC 드라이버 (JPA/Flyway/H2 콘솔용)
+	runtimeOnly 'com.h2database:h2' // H2 JDBC 드라이버
 	runtimeOnly 'io.r2dbc:r2dbc-h2' // H2 R2DBC 드라이버
 
 	// Tracing: 분산 트레이싱 (Micrometer + Brave, 로그의 traceId/spanId 연동)
@@ -58,9 +57,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0' // Lombok 연동 바인딩
 
 	// Test: 테스트 환경
-	// spring-boot-starter-hateoas-test는 사용하는 테스트 코드가 없고, spring-boot-starter-webmvc-test를
-	// 전이 의존성으로 끌어와 테스트 컨텍스트가 서블릿 스택으로 기동되게 만들어(ServerCodecConfigurer 등
-	// 리액티브 전용 빈 부재) contextLoads()가 실패하므로 추가하지 않는다.
+	// spring-boot-starter-hateoas-test는 webmvc-test를 끌어와 테스트를 서블릿 스택으로 기동시키므로 제외
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux-test' // WebFlux 테스트 (WebTestClient)
 	testImplementation 'io.projectreactor:reactor-test' // Mono/Flux 테스트 유틸리티
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // JUnit 5 실행기
