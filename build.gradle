@@ -37,7 +37,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc' // R2DBC 리액티브 데이터 접근
 	implementation 'org.springframework.boot:spring-boot-flyway' // Flyway 부트 연동
 	implementation 'org.flywaydb:flyway-core' // DB 스키마 마이그레이션 (R2DBC 전환 후에도 필요)
-	implementation 'org.springframework.boot:spring-boot-h2console' // H2 웹 콘솔
 	runtimeOnly 'com.h2database:h2' // H2 JDBC 드라이버
 	runtimeOnly 'io.r2dbc:r2dbc-h2' // H2 R2DBC 드라이버
 
