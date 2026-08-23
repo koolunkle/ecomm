@@ -26,7 +26,7 @@ dependencies {
 
 	// OpenAPI: Swagger/OpenAPI 연동
 	implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.25' // Swagger 어노테이션
-	compileOnly 'org.openapitools:jackson-databind-nullable:0.2.3' // OpenAPI Nullable 필드 처리
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.3' // OpenAPI Nullable 필드 처리 (런타임에도 필요)
 
 	// Persistence: 데이터베이스 및 마이그레이션
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA 데이터 접근
