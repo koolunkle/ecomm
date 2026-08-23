@@ -26,20 +26,18 @@ tags:
       url: http://swagger.io
   - name: order
     description: Operation about orders
-  - name: user
-    description: Operations about users
   - name: customer
     description: Operations about user's persona customer
   - name: address
     description: Operations about user's address
   - name: payment
     description: Operations about payments
-  - name: shipping
+  - name: shipment
     description: Operations about shippings
   - name: product
     description: Operations about products
-  - name: card
-    description: card operation
+  - name: user
+    description: Operations about signup, signin and so on
 
 paths:
   /api/v1/carts/{customerId}:
@@ -60,6 +58,9 @@ paths:
         200:
           description: successful operation
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Cart"
             application/json:
               schema:
                 $ref: "#/components/schemas/Cart"
@@ -103,6 +104,11 @@ paths:
         200:
           description: successful operation
           content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
             application/json:
               schema:
                 type: array
@@ -127,6 +133,9 @@ paths:
       requestBody:
         description: Item object
         content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Item"
           application/json:
             schema:
               $ref: "#/components/schemas/Item"
@@ -134,6 +143,11 @@ paths:
         201:
           description: Item added successfully
           content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
             application/json:
               schema:
                 type: array
@@ -158,6 +172,9 @@ paths:
       requestBody:
         description: Item object
         content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Item"
           application/json:
             schema:
               $ref: "#/components/schemas/Item"
@@ -165,6 +182,11 @@ paths:
         201:
           description: Item added successfully
           content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
             application/json:
               schema:
                 type: array
@@ -197,6 +219,9 @@ paths:
         200:
           description: If item exists in cart
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Item"
             application/json:
               schema:
                 $ref: "#/components/schemas/Item"
@@ -235,6 +260,9 @@ paths:
       requestBody:
         description: New Order Request object
         content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/NewOrder"
           application/json:
             schema:
               $ref: "#/components/schemas/NewOrder"
@@ -242,6 +270,9 @@ paths:
         201:
           description: Order added successfully
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Order"
             application/json:
               schema:
                 $ref: "#/components/schemas/Order"
@@ -265,6 +296,11 @@ paths:
         200:
           description: If order exists.
           content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
             application/json:
               schema:
                 type: array
@@ -279,7 +315,7 @@ paths:
         - order
       summary: Returns the order of given order ID
       description: Returns orders of given order ID
-      operationId: getOrdersByOrderId
+      operationId: getByOrderId
       parameters:
         - name: id
           in: path
@@ -291,6 +327,9 @@ paths:
         200:
           description: If order exists.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Order"
             application/json:
               schema:
                 $ref: "#/components/schemas/Order"
@@ -308,6 +347,11 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
             application/json:
               schema:
                 type: array
@@ -331,6 +375,9 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/User"
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
@@ -357,7 +404,7 @@ paths:
         - customer
       summary: Returns all customer's cards
       description: Returns all customer's cards based on given customer ID
-      operationId: getCardsByCustomerId
+      operationId: getCardByCustomerId
       parameters:
         - name: id
           in: path
@@ -369,6 +416,9 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Card"
             application/json:
               schema:
                 $ref: "#/components/schemas/Card"
@@ -390,11 +440,14 @@ paths:
         200:
           description: For successful fetch.
           content:
-            application/json:
+            application/xml:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/Address"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Address"
   /api/v1/addresses:
     get:
       tags:
@@ -406,6 +459,11 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Address"
             application/json:
               schema:
                 type: array
@@ -419,6 +477,9 @@ paths:
       operationId: createAddress
       requestBody:
         content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/AddAddressReq"
           application/json:
             schema:
               $ref: "#/components/schemas/AddAddressReq"
@@ -426,6 +487,9 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Address"
             application/json:
               schema:
                 $ref: "#/components/schemas/Address"
@@ -447,6 +511,9 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Address"
             application/json:
               schema:
                 $ref: "#/components/schemas/Address"
@@ -478,6 +545,11 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Card"
             application/json:
               schema:
                 type: array
@@ -486,11 +558,14 @@ paths:
     post:
       tags:
         - card
-      summary: Creates a  new card
-      description: Creates a new card. or replaces the existing one
+      summary: Creates a new user addresses
+      description: Creates a new user addresses. Does nothing if address already exists.
       operationId: registerCard
       requestBody:
         content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/AddCardReq"
           application/json:
             schema:
               $ref: "#/components/schemas/AddCardReq"
@@ -498,6 +573,9 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Card"
             application/json:
               schema:
                 $ref: "#/components/schemas/Card"
@@ -519,6 +597,9 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Card"
             application/json:
               schema:
                 $ref: "#/components/schemas/Card"
@@ -548,6 +629,9 @@ paths:
       operationId: authorize
       requestBody:
         content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/PaymentReq"
           application/json:
             schema:
               $ref: "#/components/schemas/PaymentReq"
@@ -555,6 +639,9 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Authorization"
             application/json:
               schema:
                 $ref: "#/components/schemas/Authorization"
@@ -565,7 +652,7 @@ paths:
       description: Return the payment authorization for the specified order
       operationId: getOrdersPaymentAuthorization
       parameters:
-        - name: id
+        - name: orderId
           in: query
           description: Order Identifier
           required: true
@@ -575,37 +662,47 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Authorization"
             application/json:
               schema:
                 $ref: "#/components/schemas/Authorization"
   /api/v1/shipping:
     post:
       tags:
-        - shipping
+        - shipment
       summary: Ship the specified shipping request
       description: Ship the specified shipping request
       operationId: shipOrder
       requestBody:
         content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ShippingReq"
           application/json:
             schema:
               $ref: "#/components/schemas/ShippingReq"
       responses:
-        200:
-          description: For successful fetch.
+        201:
+          description: For successful post.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Authorization"
             application/json:
               schema:
                 $ref: "#/components/schemas/Authorization"
+  /api/v1/shipping/{id}:
     get:
       tags:
-        - shipping
+        - shipment
       summary: Return the Shipment
       description: Return the Shipment for the specified order
       operationId: getShipmentByOrderId
       parameters:
         - name: id
-          in: query
+          in: path
           description: Order Identifier
           required: true
           schema:
@@ -614,6 +711,11 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Shipment"
             application/json:
               schema:
                 type: array
@@ -659,6 +761,11 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
             application/json:
               schema:
                 type: array
@@ -682,9 +789,104 @@ paths:
         200:
           description: For successful fetch.
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Product"
             application/json:
               schema:
                 $ref: "#/components/schemas/Product"
+  /api/v1/users:
+    post:
+      tags:
+        - user
+      summary: Signup the a new customer (user)
+      description: Creates a new customer (user), who can login and do the shopping.
+      operationId: signUp
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/User"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        201:
+          description: For successful user creation.
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/SignedInUser"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignedInUser"
+  /api/v1/auth/token:
+    post:
+      tags:
+        - user
+      summary: Signin the customer (user)
+      description: Signin the customer (user) that generates the JWT (access token) and refresh token, which can be used for accessing APIs.
+      operationId: signIn
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/SignInReq"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInReq"
+      responses:
+        200:
+          description: For user sign-in. Once successful, user receives the access and refresh token.
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/SignedInUser"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignedInUser"
+    delete:
+      tags:
+        - user
+      summary: Signouts the customer (user)
+      description: Signouts the customer (user). It removes the refresh token from DB. Last issued JWT should be removed from client end that if not removed last for given expiration time.
+      operationId: signOut
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/RefreshToken"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshToken"
+      responses:
+        202:
+          description: Accepts the request for logout.
+  /api/v1/auth/token/refresh:
+    post:
+      tags:
+        - user
+      summary: Provides new JWT based on valid refresh token.
+      description: Provides new JWT based on valid refresh token.
+      operationId: getAccessToken
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/RefreshToken"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshToken"
+      responses:
+        200:
+          description: For successful operation.
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/SignedInUser"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignedInUser"
 components:
   schemas:
     Cart:
@@ -692,7 +894,7 @@ components:
       type: object
       properties:
         id:
-          description: Cart identifier
+          description: Cart Identifier
           type: string
         customerId:
           description: Id of the customer who possesses the cart
@@ -709,14 +911,22 @@ components:
         id:
           description: Item Identifier
           type: string
+        name:
+          description: Item name
+          type: string
+        description:
+          description: Item description
+          type: string
+        imageUrl:
+          description: Item image URL
+          type: string
         quantity:
           description: The item quantity
           type: integer
           format: int32
         unitPrice:
           description: The item's price per unit
-          type: number
-          format: double
+          $ref: "#/components/schemas/BigDecimal"
     Order:
       description: Represents an order
       type: object
@@ -741,8 +951,7 @@ components:
             $ref: "#/components/schemas/Item"
         total:
           description: Order total
-          type: number
-          format: double
+          $ref: "#/components/schemas/BigDecimal"
         payment:
           $ref: "#/components/schemas/Payment"
         shipment:
@@ -757,6 +966,8 @@ components:
             - PAYMENT_FAILED
             - SHIPMENT_FAILED
             - COMPLETED
+      xml:
+        name: Order
     AddAddressReq:
       allOf:
         - $ref: "#/components/schemas/Address"
@@ -765,6 +976,8 @@ components:
             userId:
               type: string
 
+      xml:
+        name: AddAddressReq
     Address:
       type: object
       properties:
@@ -792,14 +1005,13 @@ components:
         pincode:
           description: postal code
           type: string
+      xml:
+        name: Address
     Card:
       type: object
       properties:
         id:
           description: Card identifier
-          type: string
-        userId:
-          description: Identifier of the card's owner
           type: string
         cardNumber:
           description: Card Number
@@ -810,10 +1022,21 @@ components:
         cvv:
           description: CVV code
           type: string
+        userId:
+          description: Identifier of the card's owner
+          type: string
+      xml:
+        name: Card
     AddCardReq:
       description: Request object for new card registration.
       allOf:
         - $ref: "#/components/schemas/Card"
+        - type: object
+          properties:
+            userId:
+              type: string
+      xml:
+        name: AddCardReq
     Payment:
       type: object
       properties:
@@ -826,11 +1049,13 @@ components:
         message:
           description: Approval or rejection message
           type: string
+      xml:
+        name: Payment
     Shipment:
       type: object
       properties:
         id:
-          description: Shipment identifier
+          description: Shipment Identifier
           type: string
         orderId:
           description: Order Identifier
@@ -845,6 +1070,8 @@ components:
           description: Estimated Delivery Date
           type: string
           format: date
+      xml:
+        name: Shipment
     ShippingReq:
       description: Contains information required for Shipping request
       type: object
@@ -858,6 +1085,8 @@ components:
           description: The number of items in the order
           type: integer
           format: int32
+      xml:
+        name: ShippingReq
 
     User:
       type: object
@@ -878,25 +1107,36 @@ components:
           type: string
         userStatus:
           type: string
-          description: User Status
+        addressId:
+          type: string
+        cardId:
+          type: string
+      xml:
+        name: User
     NewOrder:
       description: Contains the new order request information
       type: object
       properties:
         customerId:
-          description: Identifier of the customer placing the order
           type: string
-        addressId:
-          description: Identifier of the shipping address to use
-          type: string
-        cardId:
-          description: Identifier of the payment card to use
-          type: string
+        address:
+          $ref: "#/components/schemas/Address"
+        card:
+          $ref: "#/components/schemas/Card"
         items:
-          description: Identifiers of the items from the shopping cart to order
+          description: Items in shopping cart
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/Item"
+      xml:
+        name: NewOrder
+    URI:
+      type: object
+      xml:
+        name: URI
+    BigDecimal:
+      type: number
+      format: double
     Authorization:
       type: object
       properties:
@@ -916,6 +1156,8 @@ components:
         error:
           description: Processing error description, if any
           type: string
+      xml:
+        name: Authorization
     PaymentReq:
       description: Contains the payment request information
       type: object
@@ -931,8 +1173,9 @@ components:
           $ref: "#/components/schemas/Card"
         amount:
           description: Payment amount
-          type: number
-          format: double
+          $ref: "#/components/schemas/BigDecimal"
+      xml:
+        name: PaymentReq
     CustomerInfoOnCard:
       description: Customer information required for payment processing
       type: object
@@ -943,6 +1186,8 @@ components:
         lastName:
           description: Customer last name
           type: string
+      xml:
+        name: CustomerInfoOnCard
     Product:
       description: Product information
       type: object
@@ -961,8 +1206,7 @@ components:
           type: string
         price:
           description: Product price
-          type: number
-          format: double
+          $ref: "#/components/schemas/BigDecimal"
         count:
           description: Product count
           type: integer
@@ -974,12 +1218,45 @@ components:
           items:
             $ref: "#/components/schemas/Tag"
     Tag:
-      description: A product tag
+      description: Tag information
       type: object
       properties:
         id:
           description: Tag identifier
           type: string
         name:
-          description: Tag name
+          description: Tag Name
+          type: string
+    SignInReq:
+      description: Request body for Sign-in
+      type: object
+      properties:
+        username:
+          description: username of the User
+          type: string
+        password:
+          description: password of the User
+          type: string
+    SignedInUser:
+      description: Signed-in user information
+      type: object
+      properties:
+        refreshToken:
+          description: Refresh Token
+          type: string
+        accessToken:
+          description: JWT Token aka access token
+          type: string
+        username:
+          description: User Name
+          type: string
+        userId:
+          description: User Identifier
+          type: string
+    RefreshToken:
+      description: Contains the refresh token
+      type: object
+      properties:
+        refreshToken:
+          description: Refresh Token
           type: string
