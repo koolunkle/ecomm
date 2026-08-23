@@ -19,38 +19,38 @@ repositories {
 }
 
 dependencies {
-	// --- Web: 서블릿 기반 MVC 웹 요청 처리 및 유효성 검증 ---
+	// Web: 서블릿 기반 MVC 웹 요청 처리 및 유효성 검증
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc' // Servlet/Tomcat 기반 웹 계층
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // Request 유효성 검증
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas' // REST HATEOAS 지원
 
-	// --- OpenAPI: Swagger/OpenAPI 연동 ---
+	// OpenAPI: Swagger/OpenAPI 연동
 	implementation 'io.swagger.core.v3:swagger-annotations-jakarta:2.2.25' // Swagger 어노테이션
 	compileOnly 'org.openapitools:jackson-databind-nullable:0.2.3' // OpenAPI Nullable 필드 처리
 
-	// --- Persistence: 데이터베이스 및 마이그레이션 ---
+	// Persistence: 데이터베이스 및 마이그레이션
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA 데이터 접근
 	implementation 'org.springframework.boot:spring-boot-flyway' // Flyway 부트 연동
 	implementation 'org.flywaydb:flyway-core' // DB 스키마 마이그레이션
 	implementation 'org.springframework.boot:spring-boot-h2console' // H2 웹 콘솔
 	runtimeOnly 'com.h2database:h2' // H2 JDBC 드라이버 (인메모리 DB)
 
-	// --- Tracing: 분산 트레이싱 (Micrometer + Brave, 로그의 traceId/spanId 연동) ---
+	// Tracing: 분산 트레이싱 (Micrometer + Brave, 로그의 traceId/spanId 연동)
 	implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave' // Micrometer-Brave 연동
 	implementation 'io.micrometer:micrometer-tracing-bridge-brave' // traceId/spanId 로깅 브리지
 
-	// --- Lombok: 코드 자동 생성 ---
+	// Lombok: 코드 자동 생성
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
-	// --- MapStruct: DTO-Entity 객체 매핑 ---
+	// MapStruct: DTO-Entity 객체 매핑
 	implementation 'org.mapstruct:mapstruct:1.6.3' // MapStruct API
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3' // MapStruct 코드 생성기
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0' // Lombok 연동 바인딩
 
-	// --- Test: 테스트 환경 ---
+	// Test: 테스트 환경
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test' // Web MVC 테스트 (MockMvc)
 	testImplementation 'org.springframework.boot:spring-boot-starter-hateoas-test' // HATEOAS 테스트
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // JUnit 5 실행기
