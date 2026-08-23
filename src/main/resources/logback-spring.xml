@@ -37,10 +37,15 @@
         </encoder>
     </appender>
 
-    <!-- Hibernate SQL 바인딩 파라미터 로깅 설정 (Hibernate 6 이상) -->
-    <logger name="org.hibernate.orm.jdbc.bind" level="trace" additivity="false">
+    <!-- R2DBC/Reactor 리액티브 데이터 접근 로깅 설정 -->
+    <logger name="org.springframework.r2dbc" level="debug" additivity="false">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
+    </logger>
+    <logger name="reactor.core" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="io.r2dbc.h2" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
     </logger>
 
     <!-- 기본 루트 로거 설정 -->
