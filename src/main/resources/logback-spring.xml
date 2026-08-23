@@ -8,10 +8,10 @@
     <property scope="context" name="LOG_PATTERN"
         value="%d{yyyy-MM-dd HH:mm:ss.SSS} %3p [${applicationName:-application},%X{traceId:-},%X{spanId:-}] [%X{env:-}] [%X{tenant:-}] [%X{user:-}] [%X{branch:-}] ${PID:- } --- [%15.15t] %-40.40logger{39} : %msg%n" />
 
-    <!-- 로그 파일 경로/롤링 크기는 배포 환경에서 JVM 시스템 프로퍼티로 오버라이드 가능 (예: -Ddemo.logging.path=/var/log/app) -->
-    <property name="LOG_DIR" value="${demo.logging.path:-logs}" />
+    <!-- 로그 파일 경로/롤링 크기는 배포 환경에서 JVM 시스템 프로퍼티로 오버라이드 가능 (예: -Decomm.logging.path=/var/log/app) -->
+    <property name="LOG_DIR" value="${ecomm.logging.path:-logs}" />
     <property name="LOG_BASE_PATH" value="${LOG_DIR}/${activeProfile}" />
-    <property name="MAX_FILE_SIZE" value="${demo.logging.rolling.max-file-size:-100MB}" />
+    <property name="MAX_FILE_SIZE" value="${ecomm.logging.rolling.max-file-size:-100MB}" />
 
     <!-- 콘솔 로그 출력 설정 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
