@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "authorizations")
+@Table(name = "\"authorization\"")
 public class AuthorizationEntity {
 
     @Id

@@ -6,9 +6,11 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ecomm.AddressApi;
+import com.example.ecomm.entity.RoleEnum.Const;
 import com.example.ecomm.hateoas.AddressRepresentationModelAssembler;
 import com.example.ecomm.model.AddAddressReq;
 import com.example.ecomm.model.Address;
@@ -30,6 +32,7 @@ public class AddressController implements AddressApi {
         .body(service.createAddress(addAddressReq).map(assembler::toModel).get());
   }
 
+  @PreAuthorize("hasRole('" + Const.ADMIN + "')")
   @Override
   public ResponseEntity<Void> deleteAddressesById(String id) {
     service.deleteAddressesById(id);

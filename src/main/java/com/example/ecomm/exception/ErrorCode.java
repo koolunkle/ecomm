@@ -45,7 +45,13 @@ public enum ErrorCode {
                         "error.item-not-found"),
         GENERIC_ALREADY_EXISTS(
                         "ECOMM-0013",
-                        "error.generic-already-exists");
+                        "error.generic-already-exists"),
+        ACCESS_DENIED(
+                        "ECOMM-0014",
+                        "error.access-denied"),
+        UNAUTHORIZED(
+                        "ECOMM-0015",
+                        "error.unauthorized");
 
         private String errCode;
         private String errMsgKey;

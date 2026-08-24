@@ -9,6 +9,8 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -24,7 +26,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "\"user\"")
 public class UserEntity {
 
     @Id
@@ -53,10 +55,13 @@ public class UserEntity {
     private String phone;
 
     @Column(name = "USER_STATUS")
-    private String userStatus;
+    private String userStatus = "ACTIVE";
 
-    // Set (not List) so that addresses and cards can be join-fetched together in one query -
-    // Hibernate can't join-fetch more than one List/bag-typed collection in a single query.
+    @Column(name = "ROLE")
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role = RoleEnum.USER;
+
+    // Set 사용 이유: Hibernate는 한 쿼리에서 List(bag) 타입 컬렉션을 두 개 이상 동시에 즉시 로딩(join fetch)할 수 없음
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "USER_ADDRESS", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ADDRESS_ID"))
     private Set<AddressEntity> addresses = new HashSet<>();
