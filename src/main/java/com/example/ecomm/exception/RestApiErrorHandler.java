@@ -10,8 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -201,5 +204,77 @@ public class RestApiErrorHandler {
                 request.getMethod());
 
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Error> handleMethodArgumentNotValidException(
+            HttpServletRequest request,
+            MethodArgumentNotValidException ex,
+            Locale locale) {
+        log.error("Payload validation failed", ex);
+
+        Error error = ErrorUtils.createError(
+                messageSource,
+                locale,
+                ErrorCode.CONSTRAINT_VIOLATION,
+                HttpStatus.BAD_REQUEST.value(),
+                request.getRequestURL().toString(),
+                request.getMethod());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<Error> handleInvalidRefreshTokenException(
+            HttpServletRequest request,
+            InvalidRefreshTokenException ex,
+            Locale locale) {
+        log.error("Invalid refresh token", ex);
+
+        Error error = ErrorUtils.createError(
+                messageSource,
+                locale,
+                ErrorCode.UNAUTHORIZED,
+                HttpStatus.UNAUTHORIZED.value(),
+                request.getRequestURL().toString(),
+                request.getMethod());
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Error> handleUsernameNotFoundException(
+            HttpServletRequest request,
+            UsernameNotFoundException ex,
+            Locale locale) {
+        log.error("Authentication failed", ex);
+
+        Error error = ErrorUtils.createError(
+                messageSource,
+                locale,
+                ErrorCode.UNAUTHORIZED,
+                HttpStatus.UNAUTHORIZED.value(),
+                request.getRequestURL().toString(),
+                request.getMethod());
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InsufficientAuthenticationException.class)
+    public ResponseEntity<Error> handleInsufficientAuthenticationException(
+            HttpServletRequest request,
+            InsufficientAuthenticationException ex,
+            Locale locale) {
+        log.error("Authentication failed", ex);
+
+        Error error = ErrorUtils.createError(
+                messageSource,
+                locale,
+                ErrorCode.UNAUTHORIZED,
+                HttpStatus.UNAUTHORIZED.value(),
+                request.getRequestURL().toString(),
+                request.getMethod());
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 }

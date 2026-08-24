@@ -1090,11 +1090,15 @@ components:
 
     User:
       type: object
+      required:
+        - username
+        - password
       properties:
         id:
           type: string
         username:
           type: string
+          minLength: 1
         firstName:
           type: string
         lastName:
@@ -1103,6 +1107,7 @@ components:
           type: string
         password:
           type: string
+          minLength: 1
         phone:
           type: string
         userStatus:
@@ -1230,13 +1235,18 @@ components:
     SignInReq:
       description: Request body for Sign-in
       type: object
+      required:
+        - username
+        - password
       properties:
         username:
           description: username of the User
           type: string
+          minLength: 1
         password:
           description: password of the User
           type: string
+          minLength: 1
     SignedInUser:
       description: Signed-in user information
       type: object
@@ -1256,7 +1266,10 @@ components:
     RefreshToken:
       description: Contains the refresh token
       type: object
+      required:
+        - refreshToken
       properties:
         refreshToken:
           description: Refresh Token
           type: string
+          minLength: 1
