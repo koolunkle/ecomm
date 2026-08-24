@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
         .build());
 
     return new SignedInUser()
-        .userId(userEntity.getUsername())
+        .username(userEntity.getUsername())
         .accessToken(token)
         .userId(userEntity.getId().toString());
   }
