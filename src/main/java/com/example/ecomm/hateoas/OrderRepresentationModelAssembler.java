@@ -64,7 +64,7 @@ public class OrderRepresentationModelAssembler extends
       resource.payment(pAssembler.toModel(entity.getPaymentEntity()));
     }
 
-    resource.add(linkTo(methodOn(OrderController.class).getOrdersByOrderId(entity.getId().toString())).withSelfRel());
+    resource.add(linkTo(methodOn(OrderController.class).getByOrderId(entity.getId().toString())).withSelfRel());
 
     return resource;
   }

@@ -55,8 +55,8 @@ public class OrderRepositoryImpl implements OrderRepositoryExt {
                 // unusable once this method's transaction/session closes (open-in-view is disabled).
                 OrderEntity entity = new OrderEntity();
                 entity.setUserEntity(em.find(UserEntity.class, UUID.fromString(m.getCustomerId())));
-                entity.setAddressEntity(em.find(AddressEntity.class, UUID.fromString(m.getAddressId())));
-                entity.setCardEntity(em.find(CardEntity.class, UUID.fromString(m.getCardId())));
+                entity.setAddressEntity(em.find(AddressEntity.class, UUID.fromString(m.getAddress().getId())));
+                entity.setCardEntity(em.find(CardEntity.class, UUID.fromString(m.getCard().getId())));
                 entity.setOrderDate(Timestamp.from(Instant.now()));
                 entity.setTotal(total);
                 entity.setStatus(StatusEnum.CREATED);

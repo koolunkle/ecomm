@@ -36,7 +36,7 @@ public class OrderController implements OrderApi {
   }
 
   @Override
-  public ResponseEntity<Order> getOrdersByOrderId(String id) {
+  public ResponseEntity<Order> getByOrderId(String id) {
     return service.getByOrderId(id)
         .map(assembler::toModel)
         .map(ResponseEntity::ok)

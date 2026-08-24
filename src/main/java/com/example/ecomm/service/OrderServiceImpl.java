@@ -27,11 +27,11 @@ public class OrderServiceImpl implements OrderService {
       throw new ResourceNotFoundException("Invalid customer id.");
     }
 
-    if (Strings.isEmpty(newOrder.getAddressId())) {
+    if (newOrder.getAddress() == null || Strings.isEmpty(newOrder.getAddress().getId())) {
       throw new ResourceNotFoundException("Invalid address id.");
     }
 
-    if (Strings.isEmpty(newOrder.getCardId())) {
+    if (newOrder.getCard() == null || Strings.isEmpty(newOrder.getCard().getId())) {
       throw new ResourceNotFoundException("Invalid card id.");
     }
 

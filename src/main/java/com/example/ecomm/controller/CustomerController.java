@@ -47,7 +47,7 @@ public class CustomerController implements CustomerApi {
   }
 
   @Override
-  public ResponseEntity<Card> getCardsByCustomerId(String id) {
+  public ResponseEntity<Card> getCardByCustomerId(String id) {
     return service.getCardByCustomerId(id)
         .map(cardAssembler::toModel)
         .map(ResponseEntity::ok)
