@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '4.1.1'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'org.openapi.generator' version '7.16.0'
+	id 'jacoco'
 }
 
 group = 'com.example'
@@ -12,6 +13,10 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
+}
+
+jacoco {
+	toolVersion = "0.8.8"
 }
 
 repositories {
@@ -60,7 +65,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // JUnit 5 실행기
 }
 
-// --- OpenAPI 코드 생성 파이프라인: 명세(openapi.yaml)로부터 Model/API 인터페이스 생성 ---
+// OpenAPI 코드 생성 파이프라인: 명세(openapi.yaml)로부터 Model/API 인터페이스 생성
 def generatedOpenApiDir = layout.buildDirectory.dir("generated/openapi")
 
 tasks.named('openApiGenerate') {
@@ -102,4 +107,31 @@ tasks.named('bootJar') {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy(jacocoTestReport)
+}
+
+// 코드 커버리지: 테스트 실행 결과로 OpenAPI 생성 코드(Model/Api)를 제외한 리포트 생성
+jacocoTestReport {
+	dependsOn test
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(
+				dir: it,
+				exclude: [
+					'com/example/ecomm/model/*',
+					'com/example/ecomm/*Api.*',
+				])
+		}))
+	}
+}
+
+// 라인 커버리지가 최소 기준(90%)에 미달하면 빌드를 실패시킴
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.9
+			}
+		}
+	}
 }
