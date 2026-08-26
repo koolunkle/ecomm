@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.example.ecomm.entity.AddressEntity;
+import com.example.ecomm.exception.ResourceNotFoundException;
 import com.example.ecomm.model.AddAddressReq;
 import com.example.ecomm.repository.AddressRepository;
 
@@ -24,6 +25,10 @@ public class AddressServiceImpl implements AddressService {
 
   @Override
   public void deleteAddressesById(String id) {
+    repository.findById(UUID.fromString(id))
+        .orElseThrow(() -> new ResourceNotFoundException(
+            String.format("No Address found with id %s.", id)));
+
     repository.deleteById(UUID.fromString(id));
   }
 
