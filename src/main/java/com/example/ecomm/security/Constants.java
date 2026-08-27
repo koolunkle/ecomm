@@ -15,4 +15,5 @@ public class Constants {
     public static final long REFRESH_EXPIRATION_TIME = 604_800_000L; // 7 days
     public static final String ROLE_CLAIM = "roles";
     public static final String AUTHORITY_PREFIX = "ROLE_";
+    public static final String ACTUATOR_URL_PREFIX = "/actuator/**";
 }

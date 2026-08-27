@@ -73,7 +73,8 @@ public class SecurityConfig {
     @Bean
     public RSAPrivateKey jwtSigningKey(KeyStore keyStore) {
         try {
-            Key key = keyStore.getKey(jwtProperties.getKeyAlias(), jwtProperties.getPrivateKeyPassphrase().toCharArray());
+            Key key = keyStore.getKey(jwtProperties.getKeyAlias(),
+                    jwtProperties.getPrivateKeyPassphrase().toCharArray());
 
             if (key instanceof RSAPrivateKey) {
                 return (RSAPrivateKey) key;
@@ -116,6 +117,8 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req.requestMatchers(toH2Console()).permitAll()
+                        .requestMatchers(PathPatternRequestMatcher.pathPattern(Constants.ACTUATOR_URL_PREFIX))
+                        .permitAll()
                         .requestMatchers(PathPatternRequestMatcher.pathPattern(HttpMethod.POST, Constants.TOKEN_URL))
                         .permitAll()
                         .requestMatchers(PathPatternRequestMatcher.pathPattern(HttpMethod.DELETE, Constants.TOKEN_URL))
