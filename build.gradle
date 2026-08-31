@@ -108,9 +108,10 @@ tasks.named('bootJar') {
 	}
 }
 
-// OCI(도커) 이미지 빌드 설정: 사내 레지스트리 주소로 이미지 이름 지정, JVM 버전 고정
+// OCI(도커) 이미지 빌드 설정: 레지스트리 주소는 -Pregistry로 주입, 기본값은 로컬 레지스트리. JVM 버전 고정
+def registry = project.findProperty('registry') ?: '192.168.45.175:5000'
 tasks.named('bootBuildImage') {
-	imageName = "210.125.90.106:5000/${project.name}:${project.version}"
+	imageName = "${registry}/${project.name}:${project.version}"
 	environment = [
 		"BP_JVM_VERSION"              : "17",
 		// 비루트로 실행되는 컨테이너에서 쓰기 불가능한 /workspace 대신 /tmp로 로그 경로 재지정

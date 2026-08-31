@@ -16,7 +16,7 @@ spec:
         app: ecomm
     spec:
       containers:
-      - image: 210.125.90.106:5000/ecomm:0.0.1-SNAPSHOT
+      - image: ecomm:0.0.1-SNAPSHOT
         name: ecomm
         resources: {}
 status: {}
