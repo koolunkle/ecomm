@@ -25,7 +25,7 @@ public class CartsController implements CartApi {
 
     @Override
     public ResponseEntity<List<Item>> addCartItemsByCustomerId(String customerId, Item item) {
-        log.info("Request for customer ID: {}\nItem: {}", customerId, item);
+        log.debug("Request for customer ID: {}\nItem: {}", customerId, item);
         return ResponseEntity.ok(service.addCartItemsByCustomerId(customerId, item));
     }
 
