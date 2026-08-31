@@ -3,15 +3,23 @@
     <springProperty scope="context" name="applicationName" source="spring.application.name" />
     <springProperty scope="context" name="activeProfile" source="spring.profiles.active"
         defaultValue="default" />
+    <springProperty name="logstashDestination" source="ecomm.logging.logstash.destination"
+        defaultValue="localhost:5002" />
 
     <!-- 로그 출력 패턴 정의 (Trace ID, Span ID, MDC 환경 변수 포함) -->
-    <property scope="context" name="LOG_PATTERN"
+    <property name="LOG_PATTERN"
         value="%d{yyyy-MM-dd HH:mm:ss.SSS} %3p [${applicationName:-application},%X{traceId:-},%X{spanId:-}] [%X{env:-}] [%X{tenant:-}] [%X{user:-}] [%X{branch:-}] ${PID:- } --- [%15.15t] %-40.40logger{39} : %msg%n" />
 
     <!-- 로그 파일 경로/롤링 크기는 배포 환경에서 JVM 시스템 프로퍼티로 오버라이드 가능 (예: -Decomm.logging.path=/var/log/app) -->
     <property name="LOG_DIR" value="${ecomm.logging.path:-logs}" />
     <property name="LOG_BASE_PATH" value="${LOG_DIR}/${activeProfile}" />
     <property name="MAX_FILE_SIZE" value="${ecomm.logging.rolling.max-file-size:-100MB}" />
+
+    <!-- Logstash로 로그를 JSON 형식으로 전송하는 TCP Appender -->
+    <appender name="STASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${logstashDestination}</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
 
     <!-- 콘솔 로그 출력 설정 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -47,6 +55,7 @@
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
+        <appender-ref ref="STASH" />
     </root>
 
     <!-- 애플리케이션 종료 시 로그 백그라운드 자원 정리 -->
