@@ -33,6 +33,11 @@ services:
       - elasticsearch
     ports:
       - 5600:5601
+  zipkin:
+    container_name: zipkin-container
+    image: openzipkin/zipkin:latest
+    ports:
+      - 9411:9411
 networks:
   elk-net:
     driver: bridge

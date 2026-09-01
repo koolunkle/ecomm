@@ -43,6 +43,8 @@ dependencies {
 	// Tracing: 분산 트레이싱 (Micrometer + Brave, 로그의 traceId/spanId 연동)
 	implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave' // Micrometer-Brave 연동
 	implementation 'io.micrometer:micrometer-tracing-bridge-brave' // traceId/spanId 로깅 브리지
+	implementation 'io.zipkin.reporter2:zipkin-reporter-brave' // Brave 스팬을 Zipkin 서버로 전송하는 리포터
+	implementation 'org.springframework.boot:spring-boot-zipkin' // Zipkin 엔드포인트/Sender 자동구성
 
 	// Logging: ELK 스택 연동 (로그를 JSON으로 인코딩하여 Logstash로 TCP 전송)
 	implementation 'net.logstash.logback:logstash-logback-encoder:7.3' // Logback -> Logstash TCP Appender/JSON 인코더
