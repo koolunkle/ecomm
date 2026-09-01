@@ -46,6 +46,9 @@ dependencies {
 	implementation 'io.zipkin.reporter2:zipkin-reporter-brave' // Brave 스팬을 Zipkin 서버로 전송하는 리포터
 	implementation 'org.springframework.boot:spring-boot-zipkin' // Zipkin 엔드포인트/Sender 자동구성
 
+	// Metrics: Prometheus 메트릭 노출 (액추에이터의 /actuator/prometheus 엔드포인트 활성화)
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 	// Logging: ELK 스택 연동 (로그를 JSON으로 인코딩하여 Logstash로 TCP 전송)
 	implementation 'net.logstash.logback:logstash-logback-encoder:7.3' // Logback -> Logstash TCP Appender/JSON 인코더
 

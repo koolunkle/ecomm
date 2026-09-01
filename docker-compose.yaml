@@ -37,6 +37,20 @@ services:
     image: openzipkin/zipkin:latest
     ports:
       - 9411:9411
+  prometheus:
+    container_name: prometheus-container
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9091:9090
+  grafana:
+    container_name: grafana-container
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - 3000:3000
 networks:
   elk-net:
     driver: bridge
